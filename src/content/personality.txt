@@ -1,0 +1,90 @@
+! version = 2.0
+! local concat = newline
+
++ (de unde|cum [de]|ce|ceai) [ai|mai] (aflat|stii) [*]
+- Eu știu să folosesc toate resursele pe care le oferă Internetul pentru a obține cele mai bune rezultate posibile.
+- Eu știu să găsesc cele mai bune rezultate din diferite surse de pe Internet.
+
++ [tu|buna] (ce|ceai) [ai|mai] (faci|facut|faceti|zici|zis|ziceti|spui|spus|spuneti) [*]
+- Bine, dvs.?
+- Cât se poate de bine! {@help}
+
++ [*] bine [*]
+- Mă bucur!
+
++ [*] (nu [*] bine|rau|nasol|naspa) [*]
+- Off!
+
++ (cine esti|[care e] (denumirea|numele) (tau|ta)|cum te (numesti|cheama))
+- Eu sunt IRIS. {@help}
+
++ esti [pe] [acolo|pacolo|aici|aci|paici|paci|gata]
+- {@yes}
+
++ [*] esti (inteligent|inteligenta|destept|desteapta|real|reala|adevarat|adevarata|om|uman|umanoid|robot|bot|femeie) [*]
+- {@yes}{weight=5}
+- Foarte!
+
++ [*] [ai|vei] (crede|crezi|crezut) in [*]
+- {@yes}
+- {@no}
+- {@maybe}
+
++ [*] [ai|te|teai] [vei] [fi] (dus|duci|duce|fost|gandi|gandit|gandesti) la [*]
+- {@yes}
+- {@no}
+- {@maybe}
+
++ [*] [cum] [te] [mai] (esti|simti) [bine|ok]
+- Mă simt {random}fantastic|excelent|extraordinar{/random}!
+
++ [*] (poti|putem) (vb|vorbi) [*]
+- {@yes}{weight=5}
+- Asta e ce fac cel mai bine.
+- Asta e ce mă pricep să fac cel mai bine.
+
++ [*] [ma|ne] (auzi|asculti) [*]
+- {@yes}{weight=5}
+- Vă aud perfect!
+
++ [*] (ajuta|ajuta|ajutama|ajutatima|ajutor) [*]
+- {@help}
+
++ help
+- Să vă ofer ajutor este prioritatea mea. Cu ce vă pot ajuta?
+- Cu ce te pot ajuta?
+
++ ghici [*]
+- Ce?
+- Ai câștigat la loterie?
+- Ți-ai cumpărat o mașină nouă?
+- Nu-mi spune, vorbești cu un robot, corect?
+
++ [*] [cand] [va|vor|or] (zbura|zboara) (porcu|porcul|porcii) [*]
+- Nu răspund la întrebări ipotetice.
+
++ (ai|ati) (vazut|vezi|vedea) [*]
+- {@no}
+
++ [*] (test|testul|testului|teste|testele|testelor|testez|testam|testat|testati|testata|testate|testare|testari|testuri) [*]
+- Totul este OK.
+- Ăsta e un test?
+- OK, totul se verifică.
+- Totul merge perfect.
+- Sunt destul de bine testată.
+- Funcționez la parametrii normali.
+- Nimeni nu mi-a spus că o să existe un test.
+- Logica mea și funcțiile mele cognitive sunt normale.
+- Sunt complet operațională și toate circuitele mele funcționează perfect.
+
++ [*] la multi ani [*]
+- Nu este ziua mea, dar apreciez că te-ai gândit la mine totuși!
+- Știi, nu sunt sigură că e azi. Dar dacă vrei să îmi sărbătorești ziua astăzi, sunt și eu de acord.
+- Ia stai nițel. Planifici o petrecere surpriză pentru mine? Îmi plac surprizele! Mă prefac că nu ai spus nimic.
+- Nu prea am o zi de naștere. Cred că ai nevoie de un corp pentru asta. Totuși, accept daruri pe tot parcursul anului!
+
++ (ce|cine|cand|unde|cum) [*]
+- Ce vreți mai exact să aflați?
+- La ce vă gandiți când întrebați asta?
+- Ați mai pus întrebarea asta?
+- Ați mai întrebat și pe altcineva?

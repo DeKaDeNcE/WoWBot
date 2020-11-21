@@ -1,0 +1,13 @@
+! version = 2.0
+! local concat = newline
+
++ [*] [prognoza] (vreme|vremea|meteo) [in|la] [*]
+- Vremea pentru astăzi: ___
+- Iată prognoza meteo pentru astăzi: ___
+- OK. Uite vremea pentru astăzi: ___
+
+//+ [*] (temp|temperatura) [in|la] [*]
+//- ^temp()
+
+//+ [*] [cate] grade [celsius] [sunt] [in|la] [*]
+//- ^temp()

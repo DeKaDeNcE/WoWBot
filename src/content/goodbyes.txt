@@ -1,0 +1,22 @@
+! version = 2.0
+! local concat = newline
+
+! sub gtg = pa
+! sub bye = pa
+! sub zbye = pa
+! sub zbafta = pa
+
++ noapte buna
+- Noapte bună!
+
++ (la revedere|pa)
+- {@goodbye}
+
++ [eu] [am] (ies|iesit|fug|fugit|plec|plecat) [*]
+- {@goodbye}
+
++ goodbye
+- pa!
+- La revedere!
+- O zi bună!
+- Ciao!

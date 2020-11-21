@@ -1,0 +1,15 @@
+! version = 2.0
+! local concat = newline
+
++ *
+
+- Cu ce vă pot ajuta?
+- Sunt aici ca să vă ajut.
+
+- Ce vroiați să spuneți mai exact?
+- Puteți repeta ce ați zis, dar formulat altfel?
+- Din păcate nu am înțeles, reformulați.
+- Nu înțeleg ceea ce spuneți, puteți să repetați cerința în alt mod?
+- Scuza-ți-mă, dar nu am înțeles, puteți repeta în alt fel?
+- Nu sunt sigură că înțeleg, puteți reformula?
+- Ceea ce spuneți este prea complicat pentru mine, puteți reformula vă rog?

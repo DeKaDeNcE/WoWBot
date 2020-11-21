@@ -1,0 +1,49 @@
+! version = 2.0
+! local concat = space
+
+! array profanity = anal oral chilot chiloti chilotii bikini cruce biserica beserica cristos
+^ cristosu cristosul christos christosu christosul boala boland cancer mascarici dracu dracul
+^ dracului dracule dracovenie draci dracii diavol satan satana tampit tampita cretin cretina
+^ idiot idioata idiotule idioato dobitoc dobitoaca fraier fraiere fraiera fraieri fraiere
+^ fraierilor nesimtit nesimtitu nesimtiti nesimtita nesimtito nesimtite nesimtitilor derbedeu
+^ derbedeilor blestem blestemata boresc borasc borat borata boratilor miel mielu mielul bou boul
+^ boule boi boilor vaca vaci vaco vac-o vacilor porc porci porcu porcule porcilor nesimporc magar
+^ magarule magarilor magarita magarito magaritza magaritzo prost prostule proast proasta proasto
+^ prostilor proastelor curva curvista curvo curvar curvari curvarilor curvelor centurista tarfa
+^ tarfulita tarfe tarfelor traseist traseista traseistelor stoarfa stoarfe stoarfele stoarfelor
+^ panarama panaramo panaram-o panaramelor parasuta parasuto parasute parasutei parasutelor tigan
+^ tiganca tiganco tigane tiganu tiganul tigani tiganilor masturbez masturebeziti-o trag fut futu
+^ futu-ti futu-te futu-te-n futute-n fute futem futem-as futi futui futai futere futute futeti fututi fututilor fututelor
+^ sug sugi suge suge-o sugeo sugem sugemi suge-mi suge-ti sugeti sugem-ai sugemai sugeam-ai sugeamai
+^ suge-mi-ai sugemi-ai sugemiai lingi lingeti lingema linge-ma lingeamai lingea-m-ai lingea-mai
+^ lingeam-ai lingeamiai lingea-mi-ai lingeami-ai lingau lingai muie muist muisti muista muisto
+^ muiste muistule muistilor muistelor muia muian muianol muiere muierea muierilor coi coaie coae
+^ coaiele coaielor coite coitze koaiele koaele koaielor koae koaie koi koite koitze pula pwla puli
+^ pwli pulii pulilor pwlii pwlilor pulicea pulica madular madularu madularul falus falusu falusul plm
+^ pizda pisda pizde pisde pizdelor pisdelor pizdoc pisdoc pizdar pisdar pizdi pisdi pizdii pisdii pizdei
+^ pisdei pasarica pasarea fofoloanca scorbura scoica savarina gogoasa gaura mulgi vagin vaginu vaginul
+^ vulva vibrator inghiti gaoaza gaozar gozarilor cur curu curul curule curului buca buci bucile bucilor
+^ bucifal lindic lindicu lindicul clitoris clitorisu clitorisul clitorisului labie labia labiei labii
+^ labiilor laba labar labari labaru labarul labarule labarilor labagiu labagiul labagiule labagiilor
+^ dezvirgina dezvirginez dezvirginata virgina virgino virgine virginei virginelor sperma sperme spermei
+^ spermelor sloboz slobozu slobozul sloboaze sloboazelor slobozului slobozi slobozesc morhoz morhozu morhozul
+^ morhozului ciclu menstruatie menstruatia sange sangele mort morti mortii mortilor mama mata mati matii
+^ ma-ta ma-ti ma-tii masi masii ma-si ma-sii rahat rahatu rahati rahatilor rahatii rahatu rahatul rahatule
+^ cac caci caca kaka cacat kkt kacat cakat kakat cacati kakati cacatilor kakatilor cacatii kakatii cacatu kakatu
+^ cacatul kakatul cacatule kakatule cacare kakare cacarea kakarea cacanar kakanar cacanaru kakanaru cacanarul
+^ kakanarul cacanara kakanara cacanari kakanari cacanarii kakanarii cacanare kakanare cacanarule kakanarule
+^ cacanarilor kakanarilor cacam kakam cacamas cacam-as kakamas kakam-as caca-m-as kaka-m-as pis pisat pisatu
+^ pisatul pisatule pisati pisate pisatilor pisate pisatelor pisam pisamas pisam-as pisa-m-as jeg jegi jegu jegul
+^ jegule jegoasa jegosi jegosilor jegoaso jegoase jegoaselor basit basita basito basit-o basitu basitul basitule
+^ basiti basitilor basite basitelor basina besina besita pumn palma picior bat bata sex secs sexu secsu sexul secsul
+^ sexulet secsulet sexulete secsulete sexez secsez pat poponar poponaru poponarul poponarului poponarule poponari
+^ poponarilor bulangiu bulangiul bulangiule bulangii bulangiilor homalau homalaule homalai homalailor lezbiana
+^ lesbiana lezbianca lesbianca lesbianco lezbianco lesbiance lezbiancelesbiancelor lezbiancelor lesbo lezbo lesbi
+^ lezbi martalog martalogu martalogul martalogule martaloaga martaloago martalogi martalogii martalogilor sictir
+// ^ 💩 🖕 🖕🏻 🖕🏾 🖕🏿 👉👌 // TODO: fix emoji
+
++ [*] @profanity [*]{weight=100}
+- Nu apreciez tonul pe care îmi vorbiți, o să vă rog să îmi adresați întrebări într-un mod civilizat.
+- O să vă rog să țineți discuția la un nivel civilizat.
+- Folosiți un limbaj inadecvat pentru această conversație, vă rog încercați să mențineți un ton civilizat.
+- Limbajul pe care îl folosiți nu este unul adecvat.

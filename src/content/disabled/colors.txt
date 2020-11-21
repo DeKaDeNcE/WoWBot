@@ -1,0 +1,11 @@
+! version = 2.0
+! local concat = space
+
+! array colors = acvamarin alb albastru aramiu argintiu auriu azur azuriu bej bleu-marin blond blonda
+^ brunet bruneta bronz brun kaki castaniu cenusiu caramiziu ciclam crem cupru fucsia galben gri
+^ indigo maro mov mustar negru ocru oliv oranj portocaliu roscat roscata rosu rosie roz sepia siclam
+^ saten satena turcoaz verde violet visiniu
+^ albastru deschis|rosu deschis|rosu aprins|verde deschis|verde smarald
+
++ am * [un|o] * @colors
+- De ce ai ales acestă culoare pentru <star2>?
