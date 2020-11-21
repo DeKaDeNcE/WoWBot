@@ -1,0 +1,14 @@
+! version = 2.0
+! local concat = newline
+
+! person eu sunt = tu ești
+! person tu esti = eu sunt
+
+! person tu = eu
+! person eu = tu
+
+! person sunt = ești
+! person esti = sunt
+
+! person al meu = al tău
+! person al tau = al meu

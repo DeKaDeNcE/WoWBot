@@ -1,5 +1,5 @@
 .idea
-config
+src/config
 node_modules/
 Thumbs.db
 .DS_Store

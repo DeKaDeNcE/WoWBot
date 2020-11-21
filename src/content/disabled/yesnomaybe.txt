@@ -1,0 +1,44 @@
+! version = 2.0
+! local concat = newline
+
+//! array yes = yes yeah yep yup ya yea da desigur
+//! array no = no nah nope nay nu neah
+
++ yes
+- Da.
+- Desigur.
+
++ no
+- Nu.
+- În mod sigur nu.
+- Categoric nu.
+
++ maybe
+- Se poate.
+- Tot ce e posibil.
+- Probabil.
+
++ dontknow
+- Nu știu.
+- Habar n-am.
+- N-am idee.
+- Nu cred.
+
++ (multumesc) [*]
+- {@thankyou}
+
++ thankyou
+- Cu plăcere.
+- Cu mare plăcere.
+
++ [*] nu (multumesc|mersi) [*]
+- {@ok}
+
++ ok
+- OK.
+- Da, totul este OK.
+
++ (da|nu|poate|posibil|probabil)
+- Aha.
+- Înțeleg.
+- OK.

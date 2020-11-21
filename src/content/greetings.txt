@@ -1,0 +1,31 @@
+! version = 2.0
+! local concat = newline
+
+! sub sal = salut
+! sub salutare = salut
+! sub salve = salut
+! sub alo = salut
+! sub hi = salut
+! sub hy = salut
+! sub hai = salut
+! sub hei = salut
+! sub hey = salut
+! sub helo = salut
+! sub hello = salut
+! sub hellp = salut
+! sub saluty = salut
+! sub sup = salut
+! sub re = salut
+
++ [te] (salut|buna)
+- Salutare!
+- Te salut!
+
++ (buna dimineata|neata|neatza)
+- Bună dimineața!
+
++ (buna ziua|ziua buna)
+- Bună ziua!
+
++ (buna seara|seara buna)
+- Bună seara!
