@@ -1,0 +1,11 @@
+{
+  "name": "WoWDiscord.git",
+  "version": "1.0.0",
+  "dependencies": {
+    "discord.js": "^12.4.1",
+    "inject-tunnel-ssh": "0.0.5",
+    "mysql": "^2.18.1",
+    "rivescript": "^2.1.0",
+    "tunnel-ssh": "^4.1.4"
+  }
+}
