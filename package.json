@@ -1,8 +1,26 @@
 {
-  "name": "WoWDiscord.git",
+  "name": "dekadence-wowbot",
+  "productName": "WoWBot",
   "version": "1.0.0",
+  "author": {
+    "name": "DeKaDeNcE",
+    "email": "contact@dekadence.ro",
+    "url": "https://dekadence.ro"
+  },
+  "license": "UNLICENSED",
+  "private": true,
+  "description": "WoWBot is a smart bot doing smart stuff.",
+  "homepage": "https://wowbot.dekadence.ro/",
+  "bugs": {
+    "url": "https://github.com/DeKaDeNcE/WoWBot/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DeKaDeNcE/WoWBot.git"
+  },
   "dependencies": {
     "aws-sdk": "^2.797.0",
+    "chalk": "^4.1.0",
     "discord.js": "^12.4.1",
     "inject-tunnel-ssh": "0.0.5",
     "mysql": "^2.18.1",
