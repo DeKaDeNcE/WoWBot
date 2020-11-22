@@ -1,31 +1,100 @@
 // noinspection JSUnresolvedFunction
-const fs = require('fs')
-// noinspection JSUnresolvedFunction
 const readline = require('readline')
 // noinspection JSUnresolvedFunction
 const RiveScript = require('rivescript')
 // noinspection JSUnresolvedFunction
+const Telnet = require('telnet-client')
+// noinspection JSUnresolvedFunction
 const tunnel = require('tunnel-ssh')
 // noinspection JSUnresolvedFunction
 const mysql = require('mysql')
-// noinspection JSUnresolvedFunction
-const { Client, MessageEmbed, Collection } = require('discord.js')
-// noinspection JSUnresolvedFunction
-const configDiscord = require('./config/discord.json')
-// noinspection JSUnresolvedFunction
-const configMySQL = require('./config/mysql_local.json')
-// noinspection JSUnresolvedFunction
-const configSSH = require('./config/ssh.json')
 
-/*const connectionMySQL = mysql.createConnection(configMySQL)
+// noinspection JSUnresolvedFunction
+const config = require('./config.json')
+// noinspection JSUnresolvedFunction
+const banner = require('./banner')
+// noinspection JSUnresolvedFunction
+const docker = require('./docker')
 
-const connectionSSH = tunnel(configSSH, (error, server) => {
-	if (error) {
-		console.log(error)
+let discord
+let bot
+let telnet
+let tunnel_mysql
+let tunnel_telnet
+let db
+let io
+
+// noinspection JSUnresolvedVariable
+if (config.BOT.SHOW_BANNER) {
+	console.log(banner())
+}
+
+if (docker()) {
+	console.log('[Engine] I am running inside a Docker container.')
+} else {
+	console.log('[Engine] I am NOT running inside a Docker container.')
+}
+
+if (config.BOT.INTERACTIVE_ENABLED) {
+	console.log('[Interactive] ! Enabled')
+	// noinspection JSUnresolvedVariable
+	io = readline.createInterface({
+		input: process.stdin,
+		output: process.stdout
+	})
+}
+
+// noinspection JSUnresolvedVariable
+if (config.BOT.DATABASE_ENABLED) {
+	console.log('[DB] ! Enabled')
+
+	// noinspection JSUnresolvedVariable
+	db = mysql.createConnection({
+		host: config.DATABASE.TEST ? config.DATABASE.DATABASE_TEST.HOST : config.DATABASE.HOST,
+		port: config.BOT.TUNNEL_ENABLED ? config.TUNNEL.DATABASE_PORT : (config.DATABASE.TEST ? config.DATABASE.DATABASE_TEST.PORT : config.DATABASE.PORT),
+		user: config.DATABASE.TEST ? config.DATABASE.DATABASE_TEST.USERNAME : config.DATABASE.USERNAME,
+		password: config.DATABASE.TEST ? config.DATABASE.DATABASE_TEST.PASSWORD : config.DATABASE.PASSWORD,
+		debug: config.DATABASE.TEST ? config.DATABASE.DATABASE_TEST.DEBUG : config.DATABASE.DEBUG
+	})
+
+	if (config.BOT.TUNNEL_ENABLED) {
+		// noinspection JSUnresolvedVariable,JSUnusedLocalSymbols
+		tunnel_mysql = tunnel({
+			username: config.TUNNEL.USERNAME,
+			password: config.TUNNEL.PASSWORD,
+			host: config.TUNNEL.HOST,
+			port: config.TUNNEL.PORT,
+			dstPort: config.DATABASE.PORT,
+			localHost: config.TUNNEL.LOCALHOST,
+			localPort: config.TUNNEL.DATABASE_PORT,
+			keepAlive: true,
+			keepaliveInterval: 300
+		}, (error, server) => {
+			if (error) {
+				console.log(error)
+			} else {
+				db.connect()
+
+				// noinspection JSUnresolvedVariable,JSUnusedLocalSymbols
+				db.query(`SELECT * FROM ${config.DATABASE.DATABASE_AUTH}.realmlist`, (error, results, fields) => {
+					if (error) {
+						console.log(error)
+					} else {
+						// noinspection JSUnresolvedVariable
+						console.log('The solution is: ', results)
+					}
+
+					db.end()
+					// noinspection JSUnresolvedFunction
+					tunnel_mysql.close()
+				})
+			}
+		})
 	} else {
-		connectionMySQL.connect()
+		db.connect()
 
-		connectionMySQL.query(`SELECT * FROM ${configMySQL.database_auth}.realmlist`, (error, results, fields) => {
+		// noinspection JSUnresolvedVariable,JSUnusedLocalSymbols
+		db.query(`SELECT * FROM ${(config.DATABASE.TEST ? config.DATABASE.DATABASE_TEST.DATABASE_AUTH : config.DATABASE.DATABASE_AUTH)}.realmlist`, (error, results, fields) => {
 			if (error) {
 				console.log(error)
 			} else {
@@ -33,138 +102,201 @@ const connectionSSH = tunnel(configSSH, (error, server) => {
 				console.log('The solution is: ', results)
 			}
 
-			connectionMySQL.end()
-			// noinspection JSUnresolvedFunction
-			connectionSSH.close()
+			db.end()
 		})
 	}
-})*/
-
-const rl = readline.createInterface({
-	input: process.stdin,
-	output: process.stdout
-})
-
-// noinspection JSCheckFunctionSignatures,JSUnusedGlobalSymbols
-const bot = new RiveScript({
-	debug: true,
-	onDebug: msg => {
-		console.log(msg)
-	}
-})
-
-// noinspection JSUnresolvedFunction
-const clientDiscord = new Client()
-clientDiscord.commands = new Collection()
-const cooldowns = new Collection()
-
-const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'))
-
-for (const file of commandFiles) {
-	// noinspection JSUnresolvedFunction
-	const command = require(`./commands/${file}`)
-	clientDiscord.commands.set(command.name, command)
 }
 
-clientDiscord.on('ready', () => {
-	console.log(`Logged in as ${clientDiscord.user.tag}!`)
+if (config.BOT.AI_ENABLED) {
+	console.log('[AI] ! Enabled')
+	// noinspection JSCheckFunctionSignatures,JSUnusedGlobalSymbols
+	bot = new RiveScript({
+		debug: config.AI.DEBUG,
+		onDebug: msg => {
+			console.log(msg)
+		}
+	})
+}
 
+if (config.BOT.INTERACTIVE_ENABLED && config.BOT.TELNET_ENABLED) {
+	console.log('[Telnet] ! Enabled')
+
+	telnet = new Telnet()
+
+	// noinspection JSUnresolvedFunction
+	telnet.on('connect', () => {
+		console.log('[Telnet] ! Connected')
+	})
+
+	// noinspection JSUnresolvedFunction,JSUnusedLocalSymbols
+	telnet.on('ready', prompt => {
+		console.log('[Telnet] ! Ready')
+
+		io.setPrompt('[Telnet] > ')
+		io.prompt()
+
+		io.on('line', command => {
+			if (command !== '') {
+				// noinspection JSCheckFunctionSignatures,JSIgnoredPromiseFromCall
+				telnet.exec(command, (err, response) => {
+					console.log(`[Telnet] < ${response}`)
+					io.prompt()
+				})
+			} else {
+				io.prompt()
+			}
+		}).on('close', () => {
+			// noinspection JSUnresolvedVariable
+			process.exit(0)
+		})
+	})
+
+	// noinspection JSUnresolvedFunction
+	telnet.on('writedone', () => {
+		if (config.TELNET.DEBUG) {
+			console.log('[Telnet] ! Write Done')
+		}
+	})
+
+	// noinspection JSUnresolvedFunction
+	telnet.on('data', buffer => {
+		if (config.TELNET.DEBUG) {
+			console.log(`[Telnet] ! Data: ${buffer}`)
+		}
+	})
+
+	// noinspection JSUnresolvedFunction
+	telnet.on('timeout', () => {
+		console.log('[Telnet] ! Socket Timeout')
+		// noinspection JSIgnoredPromiseFromCall
+		telnet.end()
+	})
+
+	// noinspection JSUnresolvedFunction
+	telnet.on('failedlogin', () => {
+		console.log('[Telnet] ! Failed Login')
+	})
+
+	// noinspection JSUnresolvedFunction
+	telnet.on('error', () => {
+		console.log('[Telnet] ! Error')
+	})
+
+	// noinspection JSUnresolvedFunction
+	telnet.on('end', () => {
+		console.log('[Telnet] ! Disconnected')
+	})
+
+	// noinspection JSUnresolvedFunction
+	telnet.on('close', () => {
+		console.log('[Telnet] ! Connection Closed')
+	})
+
+	async function connect() {
+		const params = {
+			host: config.BOT.TUNNEL_ENABLED ? config.TUNNEL.LOCALHOST : config.SERVER.HOST,
+			port: config.BOT.TUNNEL_ENABLED ? config.TUNNEL.TELNET_PORT : config.SERVER.TELNET_PORT,
+			loginPrompt: /Username[: ]*/i,
+			passwordPrompt: /Password[: ]*/i,
+			failedLoginMatch: config.TELNET.FAILED_LOGIN,
+			shellPrompt: config.TELNET.PROMPT,
+			username: config.TELNET.TEST ? config.TELNET.TELNET_TEST.USERNAME : config.TELNET.USERNAME,
+			password: config.TELNET.TEST ? config.TELNET.TELNET_TEST.PASSWORD : config.TELNET.PASSWORD,
+			timeout: config.TELNET.TIMEOUT,
+			irs: '\r\n',
+			ors: '\r\n',
+			debug: config.TELNET.DEBUG
+		}
+
+		if (config.BOT.TUNNEL_ENABLED) {
+			console.log('[Telnet] ! Tunnel Enabled')
+
+			// noinspection JSUnresolvedVariable,JSUnusedLocalSymbols
+			tunnel_telnet = tunnel({
+				username: config.TUNNEL.USERNAME,
+				password: config.TUNNEL.PASSWORD,
+				host: config.TUNNEL.HOST,
+				port: config.TUNNEL.PORT,
+				dstPort: config.SERVER.TELNET_PORT,
+				localHost: config.TUNNEL.LOCALHOST,
+				localPort: config.TUNNEL.TELNET_PORT,
+				keepAlive: true,
+				keepaliveInterval: 300
+			}, async (error, server) => {
+				if (error) {
+					console.log(error)
+				} else {
+					try {
+						// noinspection JSIgnoredPromiseFromCall
+						await telnet.connect(params).catch(error => {
+							console.log(`[Telnet] ! ${error}`)
+						})
+					} catch (error) {
+						throw error
+					}
+				}
+			})
+		} else {
+			try {
+				// noinspection JSIgnoredPromiseFromCall
+				await telnet.connect(params).catch(error => {
+					console.log(`[Telnet] ! ${error}`)
+				})
+			} catch (error) {
+				throw error
+			}
+		}
+	}
+
+	connect().catch(error => {
+		console.log(`[Telnet] ! ${error}`)
+	})
+}
+
+if (config.BOT.AI_ENABLED) {
 	// noinspection JSUnusedLocalSymbols, JSCheckFunctionSignatures
-	bot.loadDirectory('./content').then(() => {
+	bot.loadDirectory(`./src/${config.AI.CONTENT_DIR}`).then(() => {
 		bot.sortReplies()
-
-		rl.setPrompt('[user] ')
-		rl.prompt()
 
 		console.log('Content loaded!')
 
-		rl.on('line', cmd => {
-			if (cmd === '/quit') {
-				process.exit(0);
+		io.setPrompt(`[${config.BOT.USER_NAME}] `)
+		io.prompt()
+
+		io.on('line', command => {
+			if (command === '/quit') {
+				// noinspection JSUnresolvedVariable
+				process.exit(0)
 			} else {
 				// noinspection JSUnresolvedFunction
-				bot.reply('user', cmd).then(reply => {
+				bot.reply(config.BOT.USER_NAME, command).then(reply => {
 					console.log('[Sylvannas] ' + reply)
-					rl.prompt()
+					io.prompt()
 				}).catch(err => {
 					console.error(err)
-					rl.prompt()
+					io.prompt()
 				})
 			}
 		}).on('close', () => {
-			process.exit(0);
+			// noinspection JSUnresolvedVariable
+			process.exit(0)
 		})
 	}).catch((error, filename, lineno) => {
-		console.log('Error when loading files: ' + error);
+		console.log('Error when loading files: ' + error)
 	})
-})
+}
 
-clientDiscord.on('message', message => {
-	if (message.author.bot) return
-
-	if (message.content.startsWith(configDiscord.PREFIX)) {
-		const args = message.content.slice(configDiscord.PREFIX.length).trim().split(/ +/)
-		const commandName = args.shift().toLowerCase()
+if (!config.BOT.AI_ENABLED && !config.BOT.TELNET_ENABLED) {
+	// noinspection JSUnusedLocalSymbols
+	io.on('line', command => {
+		console.log('[Engine] AI and Telnet is disabled, nobody here to respond...')
+	}).on('close', () => {
 		// noinspection JSUnresolvedVariable
-		const command = clientDiscord.commands.get(commandName) || clientDiscord.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName))
+		process.exit(0)
+	})
+}
 
-		if (command) {
-			// noinspection JSUnresolvedVariable
-			if (command.guildOnly && message.channel.type === 'dm') {
-				return message.reply('I can\'t execute that command inside DMs!')
-			}
-
-			if (command.args && !args.length) {
-				let reply = `You didn't provide any arguments, ${message.author}!`
-
-				if (command.usage) {
-					reply += `\nThe proper usage would be: \`${configDiscord.PREFIX}${command.name} ${command.usage}\``
-				}
-
-				// noinspection JSUnresolvedFunction
-				return message.channel.send(reply)
-			}
-
-			if (!cooldowns.has(command.name)) {
-				cooldowns.set(command.name, new Collection())
-			}
-
-			const now = Date.now()
-			const timestamps = cooldowns.get(command.name)
-			// noinspection JSUnresolvedVariable
-			const cooldownAmount = (command.cooldown || 3) * 1000
-
-			if (timestamps.has(message.author.id)) {
-				const expirationTime = timestamps.get(message.author.id) + cooldownAmount
-
-				if (now < expirationTime) {
-					const timeLeft = (expirationTime - now) / 1000
-
-					return message.reply(`please wait ${timeLeft.toFixed(1)} more second(s) before reusing the \`${command.name}\` command.`)
-				}
-			}
-
-			timestamps.set(message.author.id, now)
-			setTimeout(() => timestamps.delete(message.author.id), cooldownAmount)
-
-			try {
-				command.execute(message, args)
-			} catch (error) {
-				console.error(error)
-				// noinspection JSIgnoredPromiseFromCall
-				message.reply('there was an error trying to execute that command!')
-			}
-		}
-	} else if (message.mentions.users.find(user => user.id === configDiscord.CLIENT_ID)) {
-		// noinspection JSUnresolvedFunction
-		bot.reply(message.author.id, message.content).then(reply => {
-			// noinspection JSUnresolvedFunction,JSCheckFunctionSignatures
-			return message.reply(reply)
-		}).catch(err => {
-			console.error(err)
-		})
-	}
-})
-
-// noinspection JSUnresolvedFunction,JSIgnoredPromiseFromCall
-clientDiscord.login(configDiscord.BOT_TOKEN)
+if (config.BOT.DISCORD_ENABLED) {
+	// noinspection JSUnresolvedFunction
+	discord = require('./discord')
+}
