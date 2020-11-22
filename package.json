@@ -26,6 +26,7 @@
     "chalk": "^4.1.0",
     "cld3-asm": "^3.1.1",
     "discord.js": "^12.4.1",
+    "franc-min": "^5.0.0",
     "inject-tunnel-ssh": "0.0.5",
     "mysql": "^2.18.1",
     "rivescript": "^2.1.0",

@@ -1,6 +1,6 @@
 
 // noinspection JSUnresolvedFunction
-const { PREFIX } = require('../config/discord.json')
+const { PREFIX } = require('../config.json')
 
 // noinspection JSUnresolvedVariable
 module.exports = {

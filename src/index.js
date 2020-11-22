@@ -1,4 +1,6 @@
 // noinspection JSUnresolvedFunction
+const fs = require('fs')
+// noinspection JSUnresolvedFunction
 const readline = require('readline')
 // noinspection JSUnresolvedFunction
 const RiveScript = require('rivescript')
@@ -8,6 +10,8 @@ const Telnet = require('telnet-client')
 const tunnel = require('tunnel-ssh')
 // noinspection JSUnresolvedFunction
 const mysql = require('mysql')
+// noinspection JSUnresolvedFunction
+const { Client, MessageEmbed, Collection } = require('discord.js')
 
 // noinspection JSUnresolvedFunction
 const config = require('./config.json')
@@ -118,7 +122,7 @@ if (config.BOT.AI_ENABLED) {
 	})
 }
 
-if (config.BOT.INTERACTIVE_ENABLED && config.BOT.TELNET_ENABLED) {
+if ((config.BOT.INTERACTIVE_ENABLED || config.BOT.DISCORD_ENABLED) && config.BOT.TELNET_ENABLED) {
 	console.log('[Telnet] ! Enabled')
 
 	telnet = new Telnet()
@@ -132,23 +136,30 @@ if (config.BOT.INTERACTIVE_ENABLED && config.BOT.TELNET_ENABLED) {
 	telnet.on('ready', prompt => {
 		console.log('[Telnet] ! Ready')
 
-		io.setPrompt('[Telnet] > ')
-		io.prompt()
+		if (config.BOT.INTERACTIVE_ENABLED) {
+			io.setPrompt('[Telnet] > ')
+			io.prompt()
 
-		io.on('line', command => {
-			if (command !== '') {
-				// noinspection JSCheckFunctionSignatures,JSIgnoredPromiseFromCall
-				telnet.exec(command, (err, response) => {
-					console.log(`[Telnet] < ${response}`)
+			io.on('line', command => {
+				if (command !== '') {
+					// noinspection JSCheckFunctionSignatures,JSIgnoredPromiseFromCall
+					telnet.exec(command, (error, response) => {
+						if (error) {
+							console.log(`[Telnet] ! ${error}`)
+						} else {
+							console.log(`[Telnet] < ${response}`)
+						}
+
+						io.prompt()
+					})
+				} else {
 					io.prompt()
-				})
-			} else {
-				io.prompt()
-			}
-		}).on('close', () => {
-			// noinspection JSUnresolvedVariable
-			process.exit(0)
-		})
+				}
+			}).on('close', () => {
+				// noinspection JSUnresolvedVariable
+				process.exit(0)
+			})
+		}
 	})
 
 	// noinspection JSUnresolvedFunction
@@ -203,8 +214,8 @@ if (config.BOT.INTERACTIVE_ENABLED && config.BOT.TELNET_ENABLED) {
 			username: config.TELNET.TEST ? config.TELNET.TELNET_TEST.USERNAME : config.TELNET.USERNAME,
 			password: config.TELNET.TEST ? config.TELNET.TELNET_TEST.PASSWORD : config.TELNET.PASSWORD,
 			timeout: config.TELNET.TIMEOUT,
-			irs: '\r\n',
-			ors: '\r\n',
+			irs: config.TELNET.INPUT_SEPARATOR,
+			ors: config.TELNET.OUTPUT_SEPARATOR,
 			debug: config.TELNET.DEBUG
 		}
 
@@ -286,7 +297,7 @@ if (config.BOT.AI_ENABLED) {
 	})
 }
 
-if (!config.BOT.AI_ENABLED && !config.BOT.TELNET_ENABLED) {
+if (config.BOT.INTERACTIVE_ENABLED && !config.BOT.AI_ENABLED && !config.BOT.TELNET_ENABLED) {
 	// noinspection JSUnusedLocalSymbols
 	io.on('line', command => {
 		console.log('[Engine] AI and Telnet is disabled, nobody here to respond...')
@@ -298,5 +309,132 @@ if (!config.BOT.AI_ENABLED && !config.BOT.TELNET_ENABLED) {
 
 if (config.BOT.DISCORD_ENABLED) {
 	// noinspection JSUnresolvedFunction
-	discord = require('./discord')
+	discord = new Client()
+	discord.commands = new Collection()
+	const cooldowns = new Collection()
+
+	// noinspection JSUnresolvedVariable
+	const commandFiles = fs.readdirSync(`./src/${config.DISCORD.COMMANDS_DIR}`).filter(file => file.endsWith('.js'))
+
+	for (const file of commandFiles) {
+		// noinspection JSUnresolvedFunction,JSUnresolvedVariable
+		const command = require(`./${config.DISCORD.COMMANDS_DIR}/${file}`)
+		discord.commands.set(command.name, command)
+	}
+
+	discord.on('ready', () => {
+		console.log(`Logged in as ${discord.user.tag}!`)
+	})
+
+	discord.on('message', message => {
+		if (message.author.bot) return
+
+		if (message.content.startsWith(config.DISCORD.COMMANDS_DISCORD_PREFIX)) {
+			const args = message.content.slice(config.DISCORD.COMMANDS_DISCORD_PREFIX.length).trim().split(/ +/)
+			const commandName = args.shift().toLowerCase()
+			// noinspection JSUnresolvedVariable
+			const command = discord.commands.get(commandName) || discord.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName))
+
+			if (command) {
+				// noinspection JSUnresolvedVariable
+				if (command.guildOnly && message.channel.type === 'dm') {
+					return message.reply('I can\'t execute that command inside DMs!')
+				}
+
+				if (command.args && !args.length) {
+					let reply = `You didn't provide any arguments, ${message.author}!`
+
+					if (command.usage) {
+						reply += `\nThe proper usage would be: \`${config.DISCORD.COMMANDS_DISCORD_PREFIX}${command.name} ${command.usage}\``
+					}
+
+					// noinspection JSUnresolvedFunction
+					return message.channel.send(reply)
+				}
+
+				if (!cooldowns.has(command.name)) {
+					cooldowns.set(command.name, new Collection())
+				}
+
+				const now = Date.now()
+				const timestamps = cooldowns.get(command.name)
+				// noinspection JSUnresolvedVariable
+				const cooldownAmount = (command.cooldown || 3) * 1000
+
+				if (timestamps.has(message.author.id)) {
+					const expirationTime = timestamps.get(message.author.id) + cooldownAmount
+
+					if (now < expirationTime) {
+						const timeLeft = (expirationTime - now) / 1000
+
+						return message.reply(`please wait ${timeLeft.toFixed(1)} more second(s) before reusing the \`${command.name}\` command.`)
+					}
+				}
+
+				timestamps.set(message.author.id, now)
+				setTimeout(() => timestamps.delete(message.author.id), cooldownAmount)
+
+				try {
+					command.execute(message, args)
+				} catch (error) {
+					console.error(error)
+					// noinspection JSIgnoredPromiseFromCall
+					message.reply('there was an error trying to execute that command!')
+				}
+			}
+		} else if (message.content.startsWith(config.DISCORD.COMMANDS_SERVER_PREFIX)) {
+			if (config.BOT.TELNET_ENABLED && telnet) {
+				let hasAccess = message.member.roles.cache.some(role => {
+					return [config.DISCORD.ROLE_OWNER_ID,
+						config.DISCORD.ROLE_QA_DEVELOPER_ID,
+						config.DISCORD.ROLE_DEVELOPER_ID,
+						config.DISCORD.ROLE_TRIAL_DEVELOPER_ID,
+						config.DISCORD.ROLE_HEAD_GAME_MASTER_ID,
+						config.DISCORD.ROLE_TRIAL_GAME_MASTER_ID].includes(role.id)
+				})
+
+				const command = message.content.substring(1).toLowerCase()
+				// noinspection JSUnresolvedVariable
+				console.log(`[${message.author.id}] ${message.author.username}#${message.author.discriminator}`, command, hasAccess)
+
+				if (hasAccess) {
+					if (command !== '') {
+						telnet.exec(command, (error, response) => {
+							if (error) {
+								console.log(`[Telnet] ! ${error}`)
+							} else {
+								console.log(`[Telnet] < ${response}`)
+								if (response !== '') {
+									// noinspection JSUnresolvedFunction
+									message.channel.send(response)
+								}
+							}
+						})
+					}
+				} else {
+					// noinspection JSIgnoredPromiseFromCall
+					message.reply('You must be a GM to run server commands...')
+				}
+			} else {
+				// noinspection JSIgnoredPromiseFromCall
+				message.reply('Telnet is disabled, nobody here to respond...')
+			}
+		} else if (message.mentions.users.find(user => user.id === config.DISCORD.BOT_ID)) {
+			if (config.BOT.AI_ENABLED && bot) {
+				// noinspection JSUnresolvedFunction
+				bot.reply(message.author.id, message.content).then(reply => {
+					// noinspection JSCheckFunctionSignatures,JSIgnoredPromiseFromCall
+					message.reply(reply)
+				}).catch(error => {
+					console.error(error)
+				})
+			} else {
+				// noinspection JSIgnoredPromiseFromCall
+				message.reply('AI is disabled, nobody here to respond...')
+			}
+		}
+	})
+
+	// noinspection JSUnresolvedFunction,JSIgnoredPromiseFromCall
+	discord.login(config.DISCORD.BOT_TOKEN)
 }
