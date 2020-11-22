@@ -16,11 +16,11 @@ const { Client, MessageEmbed, Collection } = require('discord.js')
 // noinspection JSUnresolvedFunction
 const config = require('./config.json')
 // noinspection JSUnresolvedFunction
-const banner = require('./banner')
+const banner = require('./functions/banner')
 // noinspection JSUnresolvedFunction
-const docker = require('./docker')
+const docker = require('./functions/docker')
 // noinspection JSUnresolvedFunction
-const chunk = require('./chunk')
+const chunk = require('./functions/chunk')
 
 let discord
 let bot
