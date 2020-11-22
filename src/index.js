@@ -219,6 +219,7 @@ if ((config.BOT.INTERACTIVE_ENABLED || config.BOT.DISCORD_ENABLED) && config.BOT
 			irs: config.TELNET.INPUT_SEPARATOR,
 			ors: config.TELNET.OUTPUT_SEPARATOR,
 			echoLines: 0,
+			stripShellPrompt: true,
 			debug: config.TELNET.DEBUG
 		}
 
