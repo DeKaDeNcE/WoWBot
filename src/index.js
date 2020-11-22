@@ -66,10 +66,10 @@ if (config.BOT.DATABASE_ENABLED) {
 	if (config.BOT.TUNNEL_ENABLED) {
 		// noinspection JSUnresolvedVariable,JSUnusedLocalSymbols
 		tunnel_mysql = tunnel({
-			username: config.TUNNEL.USERNAME,
-			password: config.TUNNEL.PASSWORD,
-			host: config.TUNNEL.HOST,
-			port: config.TUNNEL.PORT,
+			username: config.SSH.USERNAME,
+			password: config.SSH.PASSWORD,
+			host: config.SERVER.HOST,
+			port: config.SERVER.SSH_PORT,
 			dstPort: config.DATABASE.PORT,
 			localHost: config.TUNNEL.LOCALHOST,
 			localPort: config.TUNNEL.DATABASE_PORT,
@@ -218,6 +218,7 @@ if ((config.BOT.INTERACTIVE_ENABLED || config.BOT.DISCORD_ENABLED) && config.BOT
 			timeout: config.TELNET.TIMEOUT,
 			irs: config.TELNET.INPUT_SEPARATOR,
 			ors: config.TELNET.OUTPUT_SEPARATOR,
+			echoLines: 0,
 			debug: config.TELNET.DEBUG
 		}
 
@@ -226,10 +227,10 @@ if ((config.BOT.INTERACTIVE_ENABLED || config.BOT.DISCORD_ENABLED) && config.BOT
 
 			// noinspection JSUnresolvedVariable,JSUnusedLocalSymbols
 			tunnel_telnet = tunnel({
-				username: config.TUNNEL.USERNAME,
-				password: config.TUNNEL.PASSWORD,
-				host: config.TUNNEL.HOST,
-				port: config.TUNNEL.PORT,
+				username: config.SSH.USERNAME,
+				password: config.SSH.PASSWORD,
+				host: config.SERVER.HOST,
+				port: config.SERVER.SSH_PORT,
 				dstPort: config.SERVER.TELNET_PORT,
 				localHost: config.TUNNEL.LOCALHOST,
 				localPort: config.TUNNEL.TELNET_PORT,
@@ -237,7 +238,7 @@ if ((config.BOT.INTERACTIVE_ENABLED || config.BOT.DISCORD_ENABLED) && config.BOT
 				keepaliveInterval: 300
 			}, async (error, server) => {
 				if (error) {
-					console.log(error)
+					console.log(`[Telnet] ! ${error}`)
 				} else {
 					try {
 						// noinspection JSIgnoredPromiseFromCall
@@ -245,7 +246,7 @@ if ((config.BOT.INTERACTIVE_ENABLED || config.BOT.DISCORD_ENABLED) && config.BOT
 							console.log(`[Telnet] ! ${error}`)
 						})
 					} catch (error) {
-						throw error
+						console.log(`[Telnet] ! ${error}`)
 					}
 				}
 			})
@@ -256,7 +257,7 @@ if ((config.BOT.INTERACTIVE_ENABLED || config.BOT.DISCORD_ENABLED) && config.BOT
 					console.log(`[Telnet] ! ${error}`)
 				})
 			} catch (error) {
-				throw error
+				console.log(`[Telnet] ! ${error}`)
 			}
 		}
 	}
@@ -404,6 +405,8 @@ if (config.BOT.DISCORD_ENABLED) {
 						telnet.exec(command, (error, response) => {
 							if (error) {
 								console.log(`[Telnet] ! ${error}`)
+								// noinspection JSUnresolvedFunction
+								message.channel.reply(error)
 							} else {
 								console.log(`[Telnet] < ${response}`)
 								if (response !== '') {
