@@ -18,13 +18,18 @@
     "type": "git",
     "url": "git+https://github.com/DeKaDeNcE/WoWBot.git"
   },
+  "scripts": {
+    "start": "node src/index.js"
+  },
   "dependencies": {
     "aws-sdk": "^2.797.0",
     "chalk": "^4.1.0",
+    "cld3-asm": "^3.1.1",
     "discord.js": "^12.4.1",
     "inject-tunnel-ssh": "0.0.5",
     "mysql": "^2.18.1",
     "rivescript": "^2.1.0",
+    "telnet-client": "^1.4.6",
     "tunnel-ssh": "^4.1.4"
   }
 }
