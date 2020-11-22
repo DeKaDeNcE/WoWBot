@@ -1,0 +1,74 @@
+{
+	"BOT": {
+		"SHOW_BANNER": true,
+		"CONSOLE_ENABLED": true,
+		"INTERACTIVE_ENABLED": true,
+		"AI_ENABLED": true,
+		"DISCORD_ENABLED": true,
+		"DATABASE_ENABLED": false,
+		"TUNNEL_ENABLED": true,
+		"TELNET_ENABLED": true,
+		"BOT_NAME": "WoWBot",
+		"USER_NAME": "Anonymous"
+	},
+	"SERVER": {
+		"HOST": "127.0.0.1",
+		"SSH_PORT": 22,
+		"AUTH_PORT": 1119,
+		"REALM_PORT": 8085,
+		"TELNET_PORT": 3443,
+		"SOAP_PORT": 7878
+	},
+	"SSH": {
+		"USERNAME": "",
+		"PASSWORD": ""
+	},
+	"TUNNEL": {
+		"LOCALHOST": "127.0.0.1",
+		"DATABASE_PORT": 3307,
+		"TELNET_PORT": 4444,
+		"SOAP_PORT": 7979
+	},
+	"DATABASE": {
+		"HOST": "127.0.0.1",
+		"PORT": 3306,
+		"USERNAME": "",
+		"PASSWORD": "",
+		"DATABASE_AUTH": "",
+		"DATABASE_CHARACTERS": "",
+		"DATABASE_HOTFIXES": "",
+		"DATABASE_WORLD": "",
+		"DEBUG": false
+	},
+	"TELNET": {
+		"USERNAME": "",
+		"PASSWORD": "",
+		"PROMPT_USERNAME": "/Username[: ]*$/i",
+		"PROMPT_PASSWORD": "/Password[: ]*$/i",
+		"FAILED_LOGIN": "Authentication failed",
+		"PROMPT": "TC>",
+		"INPUT_SEPARATOR": "\n",
+		"OUTPUT_SEPARATOR": "\r\n",
+		"TIMEOUT": 0,
+		"DEBUG": false
+	},
+	"AI": {
+		"CONTENT_DIR": "content",
+		"DEBUG": false
+	},
+	"DISCORD": {
+		"COMMANDS_DIR": "commands",
+		"COMMANDS_DISCORD_PREFIX": "!",
+		"COMMANDS_SERVER_PREFIX": ".",
+		"MAX_MESSAGE_LENGTH": 2000,
+		"BOT_TOKEN": "",
+		"BOT_ID": "",
+		"ROLE_OWNER_ID": "",
+		"ROLE_QA_DEVELOPER_ID": "",
+		"ROLE_DEVELOPER_ID": "",
+		"ROLE_TRIAL_DEVELOPER_ID": "",
+		"ROLE_HEAD_GAME_MASTER_ID": "",
+		"ROLE_GAME_MASTER_ID": "",
+		"ROLE_TRIAL_GAME_MASTER_ID": ""
+	}
+}
