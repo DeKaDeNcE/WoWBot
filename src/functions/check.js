@@ -1,7 +1,7 @@
 // noinspection JSUnresolvedFunction
 const net = require('net')
 
-async function check(port, {timeout = 1000, host} = {}) {
+async function check({ host, port, timeout = 1000 } = {}) {
 	const promise = new Promise(((resolve, reject) => {
 		const socket = new net.Socket()
 
@@ -28,3 +28,6 @@ async function check(port, {timeout = 1000, host} = {}) {
 		return false
 	}
 }
+
+// noinspection JSUnresolvedVariable
+module.exports = check
