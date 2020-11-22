@@ -19,6 +19,8 @@ const config = require('./config.json')
 const banner = require('./banner')
 // noinspection JSUnresolvedFunction
 const docker = require('./docker')
+// noinspection JSUnresolvedFunction
+const chunk = require('./chunk')
 
 let discord
 let bot
@@ -393,7 +395,7 @@ if (config.BOT.DISCORD_ENABLED) {
 						config.DISCORD.ROLE_TRIAL_GAME_MASTER_ID].includes(role.id)
 				})
 
-				const command = message.content.substring(1).toLowerCase()
+				const command = message.content.substring(1)
 				// noinspection JSUnresolvedVariable
 				console.log(`[${message.author.id}] ${message.author.username}#${message.author.discriminator}`, command, hasAccess)
 
@@ -405,8 +407,20 @@ if (config.BOT.DISCORD_ENABLED) {
 							} else {
 								console.log(`[Telnet] < ${response}`)
 								if (response !== '') {
-									// noinspection JSUnresolvedFunction
-									message.channel.send(response)
+									if (response.length > config.DISCORD.MAX_MESSAGE_LENGTH) {
+										let chunks = chunk(response, config.DISCORD.MAX_MESSAGE_LENGTH)
+
+										chunks.forEach(chunk => {
+											// noinspection JSUnresolvedFunction
+											message.channel.send(chunk)
+										})
+									} else {
+										// noinspection JSUnresolvedFunction
+										message.channel.send(response)
+									}
+								} else {
+									// noinspection JSIgnoredPromiseFromCall
+									message.reply('Empty response from server...')
 								}
 							}
 						})
@@ -417,7 +431,7 @@ if (config.BOT.DISCORD_ENABLED) {
 				}
 			} else {
 				// noinspection JSIgnoredPromiseFromCall
-				message.reply('Telnet is disabled, nobody here to respond...')
+				message.reply('Telnet is not connected, try again later...')
 			}
 		} else if (message.mentions.users.find(user => user.id === config.DISCORD.BOT_ID)) {
 			if (config.BOT.AI_ENABLED && bot) {
@@ -430,7 +444,7 @@ if (config.BOT.DISCORD_ENABLED) {
 				})
 			} else {
 				// noinspection JSIgnoredPromiseFromCall
-				message.reply('AI is disabled, nobody here to respond...')
+				message.reply('AI is not connected, try again later...')
 			}
 		}
 	})
