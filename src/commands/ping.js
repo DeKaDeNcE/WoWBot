@@ -1,4 +1,4 @@
-// noinspection JSUnresolvedVariable
+// noinspection JSUnresolvedVariable,JSUnusedLocalSymbols
 module.exports = {
 	name: 'ping',
 	description: 'Ping!',

@@ -1,5 +1,5 @@
 // noinspection JSUnresolvedFunction
-const hostname		= require('os').hostname()
+const hostname = require('os').hostname()
 // noinspection JSUnresolvedFunction
 const child_process	= require('child_process')
 

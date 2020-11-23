@@ -1,6 +1,6 @@
 {
 	"BOT": {
-		"SHOW_BANNER": true,
+		"BANNER_ENABLED": true,
 		"CONSOLE_ENABLED": true,
 		"INTERACTIVE_ENABLED": true,
 		"AI_ENABLED": true,
@@ -43,13 +43,17 @@
 	"TELNET": {
 		"USERNAME": "",
 		"PASSWORD": "",
-		"PROMPT_USERNAME": "/Username[: ]*$/i",
-		"PROMPT_PASSWORD": "/Password[: ]*$/i",
 		"FAILED_LOGIN": "Authentication failed",
 		"PROMPT": "TC>",
-		"INPUT_SEPARATOR": "\n",
-		"OUTPUT_SEPARATOR": "\r\n",
-		"TIMEOUT": 0,
+		"PROMPT_USERNAME": "Username[: ]*",
+		"PROMPT_PASSWORD": "Password[: ]*",
+		"SEPARATOR_INPUT": "\n",
+		"SEPARATOR_OUTPUT": "\r\n",
+		"SEPARATOR_PAGE": "---- More",
+		"TIMEOUT_INACTIVITY": 0,
+		"TIMEOUT_EXEC": 2000,
+		"TIMEOUT_SEND": 2000,
+		"ECHO_LINES": 0,
 		"DEBUG": false
 	},
 	"AI": {
