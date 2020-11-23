@@ -40,12 +40,12 @@ Enjoy!
 ---
 | Name          | Website                                       | Repository                                                                             | License                                                                     |
 | :---          | :---                                          | :---                                                                                   | :---                                                                        |
-| chalk         | -                                             | [ithub.com/chalk/chalk](https://github.com/chalk/chalk)                                | [MIT](https://github.com/chalk/chalk/blob/master/license)                   |
+| chalk         | -                                             | [github.com/chalk/chalk](https://github.com/chalk/chalk)                               | [MIT](https://github.com/chalk/chalk/blob/master/license)                   |
 | Discord.js    | [discord.js.org](https://discord.js.org/)     | [github.com/discordjs/discord.js](https://github.com/discordjs/discord.js)             | [Apache](https://github.com/discordjs/discord.js/blob/master/LICENSE)       |
 | mysql         | -                                             | [github.com/mysqljs/mysql](https://github.com/mysqljs/mysql)                           | [MIT](https://github.com/mysqljs/mysql/blob/master/License)                 |
 | rivescript-js | [rivescript.com](https://www.rivescript.com/) | [github.com/aichaos/rivescript-js](https://github.com/aichaos/rivescript-js)           | [MIT](https://github.com/aichaos/rivescript-js/blob/master/LICENSE)         |
-| telnet-client | -                                             | [github.com/mkozjak/node-telnet-client](https://github.com/mkozjak/node-telnet-client) | [LGPLv3](https://github.com/mkozjak/node-telnet-client/blob/master/LICENSE) |
 | ssh2          | -                                             | [github.com/mscdex/ssh2](https://github.com/mscdex/ssh2)                               | [MIT](https://github.com/mscdex/ssh2/blob/master/LICENSE)                   |
+| telnet-client | -                                             | [github.com/mkozjak/node-telnet-client](https://github.com/mkozjak/node-telnet-client) | [LGPLv3](https://github.com/mkozjak/node-telnet-client/blob/master/LICENSE) |
 | tunnel-ssh    | -                                             | [github.com/agebrock/tunnel-ssh](https://github.com/agebrock/tunnel-ssh)               | [MIT](https://github.com/agebrock/tunnel-ssh/blob/master/LICENSE)           |
 ---
 </details>
