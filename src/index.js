@@ -10,11 +10,11 @@ const Telnet = require('telnet-client')
 const tunnel = require('tunnel-ssh')
 // noinspection JSUnresolvedFunction
 const mysql = require('mysql')
-// noinspection JSUnresolvedFunction
+// noinspection JSUnresolvedFunction,JSUnusedLocalSymbols
 const { Client, MessageEmbed, Collection } = require('discord.js')
 
 // noinspection JSUnresolvedFunction
-const config = require('./config.json')
+const CONFIG = require('./config.json')
 // noinspection JSUnresolvedFunction
 const banner = require('./functions/banner')
 // noinspection JSUnresolvedFunction
@@ -30,8 +30,7 @@ let tunnel_telnet
 let db
 let io
 
-// noinspection JSUnresolvedVariable
-if (config.BOT.SHOW_BANNER) {
+if (CONFIG.BOT.BANNER_ENABLED) {
 	console.log(banner())
 }
 
@@ -41,7 +40,7 @@ if (docker()) {
 	console.log('[Engine] I am NOT running inside a Docker container.')
 }
 
-if (config.BOT.INTERACTIVE_ENABLED) {
+if (CONFIG.BOT.INTERACTIVE_ENABLED) {
 	console.log('[Interactive] ! Enabled')
 	// noinspection JSUnresolvedVariable
 	io = readline.createInterface({
@@ -50,29 +49,27 @@ if (config.BOT.INTERACTIVE_ENABLED) {
 	})
 }
 
-// noinspection JSUnresolvedVariable
-if (config.BOT.DATABASE_ENABLED) {
+if (CONFIG.BOT.DATABASE_ENABLED) {
 	console.log('[DB] ! Enabled')
 
-	// noinspection JSUnresolvedVariable
 	db = mysql.createConnection({
-		host: config.DATABASE.TEST ? config.DATABASE.DATABASE_TEST.HOST : config.DATABASE.HOST,
-		port: config.BOT.TUNNEL_ENABLED ? config.TUNNEL.DATABASE_PORT : (config.DATABASE.TEST ? config.DATABASE.DATABASE_TEST.PORT : config.DATABASE.PORT),
-		user: config.DATABASE.TEST ? config.DATABASE.DATABASE_TEST.USERNAME : config.DATABASE.USERNAME,
-		password: config.DATABASE.TEST ? config.DATABASE.DATABASE_TEST.PASSWORD : config.DATABASE.PASSWORD,
-		debug: config.DATABASE.TEST ? config.DATABASE.DATABASE_TEST.DEBUG : config.DATABASE.DEBUG
+		host: CONFIG.DATABASE.HOST,
+		port: CONFIG.BOT.TUNNEL_ENABLED ? CONFIG.TUNNEL.DATABASE_PORT : CONFIG.DATABASE.PORT,
+		user: CONFIG.DATABASE.USERNAME,
+		password: CONFIG.DATABASE.PASSWORD,
+		debug: CONFIG.DATABASE.DEBUG
 	})
 
-	if (config.BOT.TUNNEL_ENABLED) {
-		// noinspection JSUnresolvedVariable,JSUnusedLocalSymbols
+	if (CONFIG.BOT.TUNNEL_ENABLED) {
+		// noinspection JSUnusedLocalSymbols
 		tunnel_mysql = tunnel({
-			username: config.SSH.USERNAME,
-			password: config.SSH.PASSWORD,
-			host: config.SERVER.HOST,
-			port: config.SERVER.SSH_PORT,
-			dstPort: config.DATABASE.PORT,
-			localHost: config.TUNNEL.LOCALHOST,
-			localPort: config.TUNNEL.DATABASE_PORT,
+			username: CONFIG.SSH.USERNAME,
+			password: CONFIG.SSH.PASSWORD,
+			host: CONFIG.SERVER.HOST,
+			port: CONFIG.SERVER.SSH_PORT,
+			dstPort: CONFIG.DATABASE.PORT,
+			localHost: CONFIG.TUNNEL.LOCALHOST,
+			localPort: CONFIG.TUNNEL.DATABASE_PORT,
 			keepAlive: true,
 			keepaliveInterval: 300
 		}, (error, server) => {
@@ -81,17 +78,16 @@ if (config.BOT.DATABASE_ENABLED) {
 			} else {
 				db.connect()
 
-				// noinspection JSUnresolvedVariable,JSUnusedLocalSymbols
-				db.query(`SELECT * FROM ${config.DATABASE.DATABASE_AUTH}.realmlist`, (error, results, fields) => {
+				// noinspection JSUnusedLocalSymbols
+				db.query(`SELECT * FROM ${CONFIG.DATABASE.DATABASE_AUTH}.realmlist`, (error, results, fields) => {
 					if (error) {
 						console.log(error)
 					} else {
-						// noinspection JSUnresolvedVariable
 						console.log('The solution is: ', results)
 					}
 
 					db.end()
-					// noinspection JSUnresolvedFunction
+
 					tunnel_mysql.close()
 				})
 			}
@@ -99,12 +95,11 @@ if (config.BOT.DATABASE_ENABLED) {
 	} else {
 		db.connect()
 
-		// noinspection JSUnresolvedVariable,JSUnusedLocalSymbols
-		db.query(`SELECT * FROM ${(config.DATABASE.TEST ? config.DATABASE.DATABASE_TEST.DATABASE_AUTH : config.DATABASE.DATABASE_AUTH)}.realmlist`, (error, results, fields) => {
+		// noinspection JSUnusedLocalSymbols
+		db.query(`SELECT * FROM ${CONFIG.DATABASE.DATABASE_AUTH}.realmlist`, (error, results, fields) => {
 			if (error) {
 				console.log(error)
 			} else {
-				// noinspection JSUnresolvedVariable
 				console.log('The solution is: ', results)
 			}
 
@@ -113,32 +108,31 @@ if (config.BOT.DATABASE_ENABLED) {
 	}
 }
 
-if (config.BOT.AI_ENABLED) {
+if (CONFIG.BOT.AI_ENABLED) {
 	console.log('[AI] ! Enabled')
 	// noinspection JSCheckFunctionSignatures,JSUnusedGlobalSymbols
 	bot = new RiveScript({
-		debug: config.AI.DEBUG,
-		onDebug: msg => {
-			console.log(msg)
+		debug: CONFIG.AI.DEBUG,
+		onDebug: message => {
+			console.log(message)
 		}
 	})
 }
 
-if ((config.BOT.INTERACTIVE_ENABLED || config.BOT.DISCORD_ENABLED) && config.BOT.TELNET_ENABLED) {
+if ((CONFIG.BOT.INTERACTIVE_ENABLED || CONFIG.BOT.DISCORD_ENABLED) && CONFIG.BOT.TELNET_ENABLED) {
 	console.log('[Telnet] ! Enabled')
 
 	telnet = new Telnet()
 
-	// noinspection JSUnresolvedFunction
 	telnet.on('connect', () => {
 		console.log('[Telnet] ! Connected')
 	})
 
-	// noinspection JSUnresolvedFunction,JSUnusedLocalSymbols
+	// noinspection JSUnusedLocalSymbols
 	telnet.on('ready', prompt => {
 		console.log('[Telnet] ! Ready')
 
-		if (config.BOT.INTERACTIVE_ENABLED) {
+		if (CONFIG.BOT.INTERACTIVE_ENABLED) {
 			io.setPrompt('[Telnet] > ')
 			io.prompt()
 
@@ -164,77 +158,74 @@ if ((config.BOT.INTERACTIVE_ENABLED || config.BOT.DISCORD_ENABLED) && config.BOT
 		}
 	})
 
-	// noinspection JSUnresolvedFunction
 	telnet.on('writedone', () => {
-		if (config.TELNET.DEBUG) {
+		if (CONFIG.TELNET.DEBUG) {
 			console.log('[Telnet] ! Write Done')
 		}
 	})
 
-	// noinspection JSUnresolvedFunction
 	telnet.on('data', buffer => {
-		if (config.TELNET.DEBUG) {
+		if (CONFIG.TELNET.DEBUG) {
 			console.log(`[Telnet] ! Data: ${buffer}`)
 		}
 	})
 
-	// noinspection JSUnresolvedFunction
 	telnet.on('timeout', () => {
 		console.log('[Telnet] ! Socket Timeout')
 		// noinspection JSIgnoredPromiseFromCall
 		telnet.end()
 	})
 
-	// noinspection JSUnresolvedFunction
 	telnet.on('failedlogin', () => {
 		console.log('[Telnet] ! Failed Login')
 	})
 
-	// noinspection JSUnresolvedFunction
 	telnet.on('error', () => {
 		console.log('[Telnet] ! Error')
 	})
 
-	// noinspection JSUnresolvedFunction
 	telnet.on('end', () => {
 		console.log('[Telnet] ! Disconnected')
 	})
 
-	// noinspection JSUnresolvedFunction
 	telnet.on('close', () => {
 		console.log('[Telnet] ! Connection Closed')
 	})
 
 	async function connect() {
 		const params = {
-			host: config.BOT.TUNNEL_ENABLED ? config.TUNNEL.LOCALHOST : config.SERVER.HOST,
-			port: config.BOT.TUNNEL_ENABLED ? config.TUNNEL.TELNET_PORT : config.SERVER.TELNET_PORT,
-			loginPrompt: /Username[: ]*/i,
-			passwordPrompt: /Password[: ]*/i,
-			failedLoginMatch: config.TELNET.FAILED_LOGIN,
-			shellPrompt: config.TELNET.PROMPT,
-			username: config.TELNET.TEST ? config.TELNET.TELNET_TEST.USERNAME : config.TELNET.USERNAME,
-			password: config.TELNET.TEST ? config.TELNET.TELNET_TEST.PASSWORD : config.TELNET.PASSWORD,
-			timeout: config.TELNET.TIMEOUT,
-			irs: config.TELNET.INPUT_SEPARATOR,
-			ors: config.TELNET.OUTPUT_SEPARATOR,
-			echoLines: 0,
+			host: CONFIG.BOT.TUNNEL_ENABLED ? CONFIG.TUNNEL.LOCALHOST : CONFIG.SERVER.HOST,
+			port: CONFIG.BOT.TUNNEL_ENABLED ? CONFIG.TUNNEL.TELNET_PORT : CONFIG.SERVER.TELNET_PORT,
+			username: CONFIG.TELNET.USERNAME,
+			password: CONFIG.TELNET.PASSWORD,
+			failedLoginMatch: CONFIG.TELNET.FAILED_LOGIN,
+			shellPrompt: CONFIG.TELNET.PROMPT,
+			loginPrompt: new RegExp(CONFIG.TELNET.PROMPT_USERNAME, 'i'),
+			passwordPrompt: new RegExp(CONFIG.TELNET.PROMPT_PASSWORD, 'i'),
+			timeout: CONFIG.TELNET.TIMEOUT_INACTIVITY,
+			execTimeout: CONFIG.TELNET.TIMEOUT_EXEC,
+			sendTimeout: CONFIG.TELNET.TIMEOUT_SEND,
+			irs: CONFIG.TELNET.SEPARATOR_INPUT,
+			ors: CONFIG.TELNET.SEPARATOR_OUTPUT,
+			pageSeparator: CONFIG.TELNET.SEPARATOR_PAGE,
+			echoLines: CONFIG.TELNET.ECHO_LINES,
 			stripShellPrompt: true,
-			debug: config.TELNET.DEBUG
+			negotiationMandatory: true,
+			debug: CONFIG.TELNET.DEBUG
 		}
 
-		if (config.BOT.TUNNEL_ENABLED) {
+		if (CONFIG.BOT.TUNNEL_ENABLED) {
 			console.log('[Telnet] ! Tunnel Enabled')
 
 			// noinspection JSUnresolvedVariable,JSUnusedLocalSymbols
 			tunnel_telnet = tunnel({
-				username: config.SSH.USERNAME,
-				password: config.SSH.PASSWORD,
-				host: config.SERVER.HOST,
-				port: config.SERVER.SSH_PORT,
-				dstPort: config.SERVER.TELNET_PORT,
-				localHost: config.TUNNEL.LOCALHOST,
-				localPort: config.TUNNEL.TELNET_PORT,
+				username: CONFIG.SSH.USERNAME,
+				password: CONFIG.SSH.PASSWORD,
+				host: CONFIG.SERVER.HOST,
+				port: CONFIG.SERVER.SSH_PORT,
+				dstPort: CONFIG.SERVER.TELNET_PORT,
+				localHost: CONFIG.TUNNEL.LOCALHOST,
+				localPort: CONFIG.TUNNEL.TELNET_PORT,
 				keepAlive: true,
 				keepaliveInterval: 300
 			}, async (error, server) => {
@@ -268,14 +259,14 @@ if ((config.BOT.INTERACTIVE_ENABLED || config.BOT.DISCORD_ENABLED) && config.BOT
 	})
 }
 
-if (config.BOT.AI_ENABLED) {
+if (CONFIG.BOT.AI_ENABLED) {
 	// noinspection JSUnusedLocalSymbols, JSCheckFunctionSignatures
-	bot.loadDirectory(`./src/${config.AI.CONTENT_DIR}`).then(() => {
+	bot.loadDirectory(`./src/${CONFIG.AI.CONTENT_DIR}`).then(() => {
 		bot.sortReplies()
 
 		console.log('Content loaded!')
 
-		io.setPrompt(`[${config.BOT.USER_NAME}] `)
+		io.setPrompt(`[${CONFIG.BOT.USER_NAME}] `)
 		io.prompt()
 
 		io.on('line', command => {
@@ -283,8 +274,7 @@ if (config.BOT.AI_ENABLED) {
 				// noinspection JSUnresolvedVariable
 				process.exit(0)
 			} else {
-				// noinspection JSUnresolvedFunction
-				bot.reply(config.BOT.USER_NAME, command).then(reply => {
+				bot.reply(CONFIG.BOT.USER_NAME, command).then(reply => {
 					console.log('[Sylvannas] ' + reply)
 					io.prompt()
 				}).catch(err => {
@@ -301,7 +291,7 @@ if (config.BOT.AI_ENABLED) {
 	})
 }
 
-if (config.BOT.INTERACTIVE_ENABLED && !config.BOT.AI_ENABLED && !config.BOT.TELNET_ENABLED) {
+if (CONFIG.BOT.INTERACTIVE_ENABLED && !CONFIG.BOT.AI_ENABLED && !CONFIG.BOT.TELNET_ENABLED) {
 	// noinspection JSUnusedLocalSymbols
 	io.on('line', command => {
 		console.log('[Engine] AI and Telnet is disabled, nobody here to respond...')
@@ -311,18 +301,16 @@ if (config.BOT.INTERACTIVE_ENABLED && !config.BOT.AI_ENABLED && !config.BOT.TELN
 	})
 }
 
-if (config.BOT.DISCORD_ENABLED) {
-	// noinspection JSUnresolvedFunction
+if (CONFIG.BOT.DISCORD_ENABLED) {
 	discord = new Client()
 	discord.commands = new Collection()
-	const cooldowns = new Collection()
 
-	// noinspection JSUnresolvedVariable
-	const commandFiles = fs.readdirSync(`./src/${config.DISCORD.COMMANDS_DIR}`).filter(file => file.endsWith('.js'))
+	const cooldowns = new Collection()
+	const commandFiles = fs.readdirSync(`./src/${CONFIG.DISCORD.COMMANDS_DIR}`).filter(file => file.endsWith('.js'))
 
 	for (const file of commandFiles) {
-		// noinspection JSUnresolvedFunction,JSUnresolvedVariable
-		const command = require(`./${config.DISCORD.COMMANDS_DIR}/${file}`)
+		// noinspection JSUnresolvedFunction
+		const command = require(`./${CONFIG.DISCORD.COMMANDS_DIR}/${file}`)
 		discord.commands.set(command.name, command)
 	}
 
@@ -333,10 +321,9 @@ if (config.BOT.DISCORD_ENABLED) {
 	discord.on('message', message => {
 		if (message.author.bot) return
 
-		if (message.content.startsWith(config.DISCORD.COMMANDS_DISCORD_PREFIX)) {
-			const args = message.content.slice(config.DISCORD.COMMANDS_DISCORD_PREFIX.length).trim().split(/ +/)
+		if (message.content.startsWith(CONFIG.DISCORD.COMMANDS_DISCORD_PREFIX)) {
+			const args = message.content.slice(CONFIG.DISCORD.COMMANDS_DISCORD_PREFIX.length).trim().split(/ +/)
 			const commandName = args.shift().toLowerCase()
-			// noinspection JSUnresolvedVariable
 			const command = discord.commands.get(commandName) || discord.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName))
 
 			if (command) {
@@ -349,7 +336,7 @@ if (config.BOT.DISCORD_ENABLED) {
 					let reply = `You didn't provide any arguments, ${message.author}!`
 
 					if (command.usage) {
-						reply += `\nThe proper usage would be: \`${config.DISCORD.COMMANDS_DISCORD_PREFIX}${command.name} ${command.usage}\``
+						reply += `\nThe proper usage would be: \`${CONFIG.DISCORD.COMMANDS_DISCORD_PREFIX}${command.name} ${command.usage}\``
 					}
 
 					// noinspection JSUnresolvedFunction
@@ -362,7 +349,6 @@ if (config.BOT.DISCORD_ENABLED) {
 
 				const now = Date.now()
 				const timestamps = cooldowns.get(command.name)
-				// noinspection JSUnresolvedVariable
 				const cooldownAmount = (command.cooldown || 3) * 1000
 
 				if (timestamps.has(message.author.id)) {
@@ -386,19 +372,19 @@ if (config.BOT.DISCORD_ENABLED) {
 					message.reply('there was an error trying to execute that command!')
 				}
 			}
-		} else if (message.content.startsWith(config.DISCORD.COMMANDS_SERVER_PREFIX)) {
-			if (config.BOT.TELNET_ENABLED && telnet) {
+		} else if (message.content.startsWith(CONFIG.DISCORD.COMMANDS_SERVER_PREFIX)) {
+			if (CONFIG.BOT.TELNET_ENABLED && telnet) {
 				let hasAccess = message.member.roles.cache.some(role => {
-					return [config.DISCORD.ROLE_OWNER_ID,
-						config.DISCORD.ROLE_QA_DEVELOPER_ID,
-						config.DISCORD.ROLE_DEVELOPER_ID,
-						config.DISCORD.ROLE_TRIAL_DEVELOPER_ID,
-						config.DISCORD.ROLE_HEAD_GAME_MASTER_ID,
-						config.DISCORD.ROLE_TRIAL_GAME_MASTER_ID].includes(role.id)
+					return [CONFIG.DISCORD.ROLE_OWNER_ID,
+						CONFIG.DISCORD.ROLE_QA_DEVELOPER_ID,
+						CONFIG.DISCORD.ROLE_DEVELOPER_ID,
+						CONFIG.DISCORD.ROLE_TRIAL_DEVELOPER_ID,
+						CONFIG.DISCORD.ROLE_HEAD_GAME_MASTER_ID,
+						CONFIG.DISCORD.ROLE_TRIAL_GAME_MASTER_ID].includes(role.id)
 				})
 
 				const command = message.content.substring(1)
-				// noinspection JSUnresolvedVariable
+
 				console.log(`[${message.author.id}] ${message.author.username}#${message.author.discriminator}`, command, hasAccess)
 
 				if (hasAccess) {
@@ -411,8 +397,8 @@ if (config.BOT.DISCORD_ENABLED) {
 							} else {
 								console.log(`[Telnet] < ${response}`)
 								if (response !== '') {
-									if (response.length > config.DISCORD.MAX_MESSAGE_LENGTH) {
-										let chunks = chunk(response, config.DISCORD.MAX_MESSAGE_LENGTH)
+									if (response.length > CONFIG.DISCORD.MAX_MESSAGE_LENGTH) {
+										let chunks = chunk(response, CONFIG.DISCORD.MAX_MESSAGE_LENGTH)
 
 										chunks.forEach(chunk => {
 											// noinspection JSUnresolvedFunction
@@ -437,9 +423,8 @@ if (config.BOT.DISCORD_ENABLED) {
 				// noinspection JSIgnoredPromiseFromCall
 				message.reply('Telnet is not connected, try again later...')
 			}
-		} else if (message.mentions.users.find(user => user.id === config.DISCORD.BOT_ID)) {
-			if (config.BOT.AI_ENABLED && bot) {
-				// noinspection JSUnresolvedFunction
+		} else if (message.mentions.users.find(user => user.id === CONFIG.DISCORD.BOT_ID)) {
+			if (CONFIG.BOT.AI_ENABLED && bot) {
 				bot.reply(message.author.id, message.content).then(reply => {
 					// noinspection JSCheckFunctionSignatures,JSIgnoredPromiseFromCall
 					message.reply(reply)
@@ -453,6 +438,6 @@ if (config.BOT.DISCORD_ENABLED) {
 		}
 	})
 
-	// noinspection JSUnresolvedFunction,JSIgnoredPromiseFromCall
-	discord.login(config.DISCORD.BOT_TOKEN)
+	// noinspection JSIgnoredPromiseFromCall
+	discord.login(CONFIG.DISCORD.BOT_TOKEN)
 }

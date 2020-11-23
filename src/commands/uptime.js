@@ -1,7 +1,7 @@
 // noinspection JSUnresolvedFunction
 const { Client } = require('ssh2')
 // noinspection JSUnresolvedFunction
-const config = require('../config.json')
+const CONFIG = require('../config.json')
 // noinspection JSUnresolvedFunction
 const { MessageEmbed } = require('discord.js');
 
@@ -45,10 +45,10 @@ module.exports = {
 		})
 
 		const params = {
-			host: config.SERVER.HOST,
-			port: config.SERVER.SSH_PORT,
-			username: config.SSH.USERNAME,
-			password: config.SSH.PASSWORD
+			host: CONFIG.SERVER.HOST,
+			port: CONFIG.SERVER.SSH_PORT,
+			username: CONFIG.SSH.USERNAME,
+			password: CONFIG.SSH.PASSWORD
 		}
 
 		try {
