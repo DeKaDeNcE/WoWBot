@@ -59,7 +59,7 @@ module.exports = {
 				message.channel.reply(error)
 			}
 		} else {
-			message.channel.reply('Not implemented.')
+			message.channel.send('Not implemented.')
 		}
 	}
 }
