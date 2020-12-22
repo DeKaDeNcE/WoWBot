@@ -375,12 +375,15 @@ if (CONFIG.BOT.DISCORD_ENABLED) {
 		} else if (message.content.startsWith(CONFIG.DISCORD.COMMANDS_SERVER_PREFIX)) {
 			if (CONFIG.BOT.TELNET_ENABLED && telnet) {
 				let hasAccess = message.member.roles.cache.some(role => {
-					return [CONFIG.DISCORD.ROLE_OWNER_ID,
-						CONFIG.DISCORD.ROLE_QA_DEVELOPER_ID,
-						CONFIG.DISCORD.ROLE_DEVELOPER_ID,
+					return [
+						CONFIG.DISCORD.ROLE_OWNER_ID,
+						CONFIG.DISCORD.ROLE_ADMINS_ID,
+						CONFIG.DISCORD.ROLE_CORE_DEVELOPERS_ID,
+						CONFIG.DISCORD.ROLE_DEVELOPERS_ID,
 						CONFIG.DISCORD.ROLE_TRIAL_DEVELOPER_ID,
 						CONFIG.DISCORD.ROLE_HEAD_GAME_MASTER_ID,
-						CONFIG.DISCORD.ROLE_TRIAL_GAME_MASTER_ID].includes(role.id)
+						CONFIG.DISCORD.ROLE_TRIAL_GAME_MASTER_ID
+					].includes(role.id)
 				})
 
 				const command = message.content.substring(1)
