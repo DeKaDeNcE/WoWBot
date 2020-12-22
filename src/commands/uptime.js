@@ -1,6 +1,8 @@
 // noinspection JSUnresolvedFunction
 const { Client } = require('ssh2')
 // noinspection JSUnresolvedFunction
+const os = require('os')
+// noinspection JSUnresolvedFunction
 const CONFIG = require('../config.json')
 // noinspection JSUnresolvedFunction
 const { MessageEmbed } = require('discord.js');
@@ -59,7 +61,7 @@ module.exports = {
 				message.channel.reply(error)
 			}
 		} else {
-			message.channel.send('Not implemented.')
+			message.channel.send(os.uptime())
 		}
 	}
 }
