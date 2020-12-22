@@ -266,26 +266,28 @@ if (CONFIG.BOT.AI_ENABLED) {
 
 		console.log('Content loaded!')
 
-		io.setPrompt(`[${CONFIG.BOT.USER_NAME}] `)
-		io.prompt()
+		if (CONFIG.BOT.INTERACTIVE_ENABLED) {
+			io.setPrompt(`[${CONFIG.BOT.USER_NAME}] `)
+			io.prompt()
 
-		io.on('line', command => {
-			if (command === '/quit') {
+			io.on('line', command => {
+				if (command === '/quit') {
+					// noinspection JSUnresolvedVariable
+					process.exit(0)
+				} else {
+					bot.reply(CONFIG.BOT.USER_NAME, command).then(reply => {
+						console.log('[Sylvannas] ' + reply)
+						io.prompt()
+					}).catch(err => {
+						console.error(err)
+						io.prompt()
+					})
+				}
+			}).on('close', () => {
 				// noinspection JSUnresolvedVariable
 				process.exit(0)
-			} else {
-				bot.reply(CONFIG.BOT.USER_NAME, command).then(reply => {
-					console.log('[Sylvannas] ' + reply)
-					io.prompt()
-				}).catch(err => {
-					console.error(err)
-					io.prompt()
-				})
-			}
-		}).on('close', () => {
-			// noinspection JSUnresolvedVariable
-			process.exit(0)
-		})
+			})
+		}
 	}).catch((error, filename, lineno) => {
 		console.log('Error when loading files: ' + error)
 	})
