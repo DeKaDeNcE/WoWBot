@@ -34,7 +34,7 @@ module.exports = {
 						}
 					}).stderr.on('data', data => {
 						console.log(`[SSH] < StdErr ${data}`)
-						if (data.toString()  !== '') {
+						if (data.toString() !== '') {
 							message.channel.send(data.toString())
 						} else {
 							message.channel.reply('SSH is not connected, try again later...')
