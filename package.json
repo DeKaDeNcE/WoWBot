@@ -7,7 +7,7 @@
     "email": "contact@dekadence.ro",
     "url": "https://dekadence.ro"
   },
-  "license": "UNLICENSED",
+  "license": "MIT",
   "private": true,
   "description": "WoWBot is a smart bot doing smart stuff.",
   "homepage": "https://wowbot.dekadence.ro/",

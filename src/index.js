@@ -385,6 +385,7 @@ if (CONFIG.BOT.DISCORD_ENABLED) {
 						//CONFIG.DISCORD.ROLE_TRIAL_DEVELOPER_ID,
 						//CONFIG.DISCORD.ROLE_HEAD_GAME_MASTER_ID,
 						//CONFIG.DISCORD.ROLE_TRIAL_GAME_MASTER_ID
+						//CONFIG.DISCORD.ROLE_SERVER_BOOSTER_ID
 					].includes(role.id)
 				})
 
@@ -394,6 +395,14 @@ if (CONFIG.BOT.DISCORD_ENABLED) {
 
 				if (hasAccess) {
 					if (command !== '') {
+						// noinspection JSUnresolvedFunction
+						if (message.member.roles.has(CONFIG.DISCORD.ROLE_SERVER_BOOSTER_ID)) {
+							if (command !== '.revive') {
+								// noinspection JSIgnoredPromiseFromCall
+								return message.reply('You must be a GM to run other server commands...')
+							}
+						}
+
 						telnet.exec(command, (error, response) => {
 							if (error) {
 								console.log(`[Telnet] ! ${error}`)
@@ -414,15 +423,18 @@ if (CONFIG.BOT.DISCORD_ENABLED) {
 										message.channel.send(response)
 									}
 								} else {
-									// noinspection JSIgnoredPromiseFromCall
-									message.reply('Empty response from server...')
+									let items = ['Command executed succesfully', 'Your wish is my command']
+									let item = items[Math.floor(Math.random() * items.length)];
+
+									// noinspection JSUnresolvedFunction
+									message.channel.send(item)
 								}
 							}
 						})
 					}
 				} else {
 					// noinspection JSIgnoredPromiseFromCall
-					message.reply('You must be a GM to run server commands...')
+					message.reply('You must be a GM or Server Booser to run server commands...')
 				}
 			} else {
 				// noinspection JSIgnoredPromiseFromCall
