@@ -304,7 +304,14 @@ if (CONFIG.BOT.INTERACTIVE_ENABLED && !CONFIG.BOT.AI_ENABLED && !CONFIG.BOT.TELN
 }
 
 if (CONFIG.BOT.DISCORD_ENABLED) {
-	discord = new Client()
+	discord = new Client({
+		presence: {
+			activity: {
+				type: CONFIG.BOT.BOT_ACTIVITY_TYPE,
+				name: CONFIG.BOT.BOT_ACTIVITY_NAME
+			}
+		}
+	})
 	discord.commands = new Collection()
 
 	const cooldowns = new Collection()

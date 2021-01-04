@@ -9,7 +9,9 @@
 		"TUNNEL_ENABLED": true,
 		"TELNET_ENABLED": true,
 		"BOT_NAME": "WoWBot",
-		"USER_NAME": "Anonymous"
+		"USER_NAME": "Anonymous",
+		"BOT_ACTIVITY_TYPE": "PLAYING",
+		"BOT_ACTIVITY_NAME": "World of Warcraft"
 	},
 	"SERVER": {
 		"HOST": "127.0.0.1",
