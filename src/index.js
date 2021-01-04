@@ -397,6 +397,7 @@ if (CONFIG.BOT.DISCORD_ENABLED) {
 					if (command !== '') {
 						// noinspection JSUnresolvedFunction
 						if (message.member.roles.cache.has(CONFIG.DISCORD.ROLE_SERVER_BOOSTER_ID)) {
+							console.log(command)
 							if (command !== 'revive') {
 								// noinspection JSIgnoredPromiseFromCall
 								return message.reply('You must be a GM to run other server commands...')
