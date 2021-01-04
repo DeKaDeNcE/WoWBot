@@ -385,7 +385,7 @@ if (CONFIG.BOT.DISCORD_ENABLED) {
 						//CONFIG.DISCORD.ROLE_TRIAL_DEVELOPER_ID,
 						//CONFIG.DISCORD.ROLE_HEAD_GAME_MASTER_ID,
 						//CONFIG.DISCORD.ROLE_TRIAL_GAME_MASTER_ID
-						//CONFIG.DISCORD.ROLE_SERVER_BOOSTER_ID
+						CONFIG.DISCORD.ROLE_SERVER_BOOSTER_ID
 					].includes(role.id)
 				})
 
@@ -396,8 +396,8 @@ if (CONFIG.BOT.DISCORD_ENABLED) {
 				if (hasAccess) {
 					if (command !== '') {
 						// noinspection JSUnresolvedFunction
-						if (message.member.roles.has(CONFIG.DISCORD.ROLE_SERVER_BOOSTER_ID)) {
-							if (command !== '.revive') {
+						if (message.member.roles.cache.has(CONFIG.DISCORD.ROLE_SERVER_BOOSTER_ID)) {
+							if (command !== 'revive') {
 								// noinspection JSIgnoredPromiseFromCall
 								return message.reply('You must be a GM to run other server commands...')
 							}
@@ -434,7 +434,7 @@ if (CONFIG.BOT.DISCORD_ENABLED) {
 					}
 				} else {
 					// noinspection JSIgnoredPromiseFromCall
-					message.reply('You must be a GM or Server Booser to run server commands...')
+					message.reply('You must be a GM or Server Booster to run server commands...')
 				}
 			} else {
 				// noinspection JSIgnoredPromiseFromCall
