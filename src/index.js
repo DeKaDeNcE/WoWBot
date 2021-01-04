@@ -385,7 +385,7 @@ if (CONFIG.BOT.DISCORD_ENABLED) {
 						//CONFIG.DISCORD.ROLE_TRIAL_DEVELOPER_ID,
 						//CONFIG.DISCORD.ROLE_HEAD_GAME_MASTER_ID,
 						//CONFIG.DISCORD.ROLE_TRIAL_GAME_MASTER_ID
-						CONFIG.DISCORD.ROLE_SERVER_BOOSTER_ID
+						//CONFIG.DISCORD.ROLE_SERVER_BOOSTER_ID
 					].includes(role.id)
 				})
 
@@ -395,14 +395,7 @@ if (CONFIG.BOT.DISCORD_ENABLED) {
 
 				if (hasAccess) {
 					if (command !== '') {
-						// noinspection JSUnresolvedFunction
-						if (message.member.roles.cache.has(CONFIG.DISCORD.ROLE_SERVER_BOOSTER_ID)) {
-							if (command.startsWith('revive')) {
-								// noinspection JSIgnoredPromiseFromCall
-								return message.reply('You must be a GM to run other server commands...')
-							}
-						}
-
+						// noinspection JSUnresolvedFunction,DuplicatedCode
 						telnet.exec(command, (error, response) => {
 							if (error) {
 								console.log(`[Telnet] ! ${error}`)
@@ -431,6 +424,41 @@ if (CONFIG.BOT.DISCORD_ENABLED) {
 								}
 							}
 						})
+					}
+				} else if (message.member.roles.cache.has(CONFIG.DISCORD.ROLE_SERVER_BOOSTER_ID)) {
+					if (command.startsWith('revive')) {
+						// noinspection JSUnresolvedFunction,DuplicatedCode
+						telnet.exec(command, (error, response) => {
+							if (error) {
+								console.log(`[Telnet] ! ${error}`)
+								// noinspection JSUnresolvedFunction
+								message.channel.reply(error)
+							} else {
+								console.log(`[Telnet] < ${response}`)
+								if (response !== '') {
+									if (response.length > CONFIG.DISCORD.MAX_MESSAGE_LENGTH) {
+										let chunks = chunk(response, CONFIG.DISCORD.MAX_MESSAGE_LENGTH)
+
+										chunks.forEach(chunk => {
+											// noinspection JSUnresolvedFunction
+											message.channel.send(chunk)
+										})
+									} else {
+										// noinspection JSUnresolvedFunction
+										message.channel.send(response)
+									}
+								} else {
+									let items = ['Command executed succesfully', 'Your wish is my command']
+									let item = items[Math.floor(Math.random() * items.length)];
+
+									// noinspection JSUnresolvedFunction
+									message.channel.send(item)
+								}
+							}
+						})
+					} else {
+						// noinspection JSIgnoredPromiseFromCall
+						message.reply('You must be a GM to run other server commands...')
 					}
 				} else {
 					// noinspection JSIgnoredPromiseFromCall
