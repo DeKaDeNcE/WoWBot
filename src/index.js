@@ -308,6 +308,7 @@ if (CONFIG.BOT.INTERACTIVE_ENABLED && !CONFIG.BOT.AI_ENABLED && !CONFIG.BOT.TELN
 }
 
 if (CONFIG.BOT.DISCORD_ENABLED) {
+	// noinspection JSCheckFunctionSignatures
 	discord = new Client({
 		presence: {
 			activity: {
@@ -389,13 +390,13 @@ if (CONFIG.BOT.DISCORD_ENABLED) {
 			if (CONFIG.BOT.TELNET_ENABLED && telnet) {
 				let hasAccess = message.member.roles.cache.some(role => {
 					return [
-						CONFIG.DISCORD.ROLE_OWNER_ID,
-						CONFIG.DISCORD.ROLE_ADMINS_ID,
-						CONFIG.DISCORD.ROLE_CORE_DEVELOPERS_ID,
-						CONFIG.DISCORD.ROLE_DEVELOPERS_ID,
-						CONFIG.DISCORD.ROLE_TRIAL_DEVELOPER_ID,
-						CONFIG.DISCORD.ROLE_HEAD_GAME_MASTER_ID,
-						CONFIG.DISCORD.ROLE_TRIAL_GAME_MASTER_ID
+						CONFIG.DISCORD.ROLE_OWNER,
+						CONFIG.DISCORD.ROLE_ADMIN,
+						CONFIG.DISCORD.ROLE_CORE_DEVELOPER,
+						CONFIG.DISCORD.ROLE_DEVELOPER,
+						CONFIG.DISCORD.ROLE_TRIAL_DEVELOPER,
+						CONFIG.DISCORD.ROLE_HEAD_GAME_MASTER,
+						CONFIG.DISCORD.ROLE_TRIAL_GAME_MASTER
 					].includes(role.id)
 				})
 
@@ -432,7 +433,7 @@ if (CONFIG.BOT.DISCORD_ENABLED) {
 							}
 						})
 					}
-				} else if (message.member.roles.cache.has(CONFIG.DISCORD.ROLE_COMMUNITY_MANAGER_ID) || message.member.roles.cache.has(CONFIG.DISCORD.ROLE_SERVER_BOOSTER_ID)) {
+				} else if (message.member.roles.cache.has(CONFIG.DISCORD.ROLE_COMMUNITY_MANAGER) || message.member.roles.cache.has(CONFIG.DISCORD.ROLE_SERVER_BOOSTER)) {
 					if (command.startsWith('revive') || command.startsWith('announce') || command.startsWith('notify')) {
 						// noinspection JSUnresolvedFunction,DuplicatedCode
 						telnet.exec(command, (error, response) => {
