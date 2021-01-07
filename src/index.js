@@ -393,9 +393,9 @@ if (CONFIG.BOT.DISCORD_ENABLED) {
 						CONFIG.DISCORD.ROLE_ADMINS_ID,
 						CONFIG.DISCORD.ROLE_CORE_DEVELOPERS_ID,
 						CONFIG.DISCORD.ROLE_DEVELOPERS_ID,
-						//CONFIG.DISCORD.ROLE_TRIAL_DEVELOPER_ID,
-						//CONFIG.DISCORD.ROLE_HEAD_GAME_MASTER_ID,
-						//CONFIG.DISCORD.ROLE_TRIAL_GAME_MASTER_ID
+						CONFIG.DISCORD.ROLE_TRIAL_DEVELOPER_ID,
+						CONFIG.DISCORD.ROLE_HEAD_GAME_MASTER_ID,
+						CONFIG.DISCORD.ROLE_TRIAL_GAME_MASTER_ID
 					].includes(role.id)
 				})
 
@@ -432,7 +432,7 @@ if (CONFIG.BOT.DISCORD_ENABLED) {
 							}
 						})
 					}
-				} else if (message.member.roles.cache.has(CONFIG.DISCORD.ROLE_SERVER_BOOSTER_ID)) {
+				} else if (message.member.roles.cache.has(CONFIG.DISCORD.ROLE_COMMUNITY_MANAGER_ID) || message.member.roles.cache.has(CONFIG.DISCORD.ROLE_SERVER_BOOSTER_ID)) {
 					if (command.startsWith('revive') || command.startsWith('announce') || command.startsWith('notify')) {
 						// noinspection JSUnresolvedFunction,DuplicatedCode
 						telnet.exec(command, (error, response) => {
