@@ -335,7 +335,9 @@ if (CONFIG.BOT.DISCORD_ENABLED) {
 	discord.on('message', message => {
 		if (message.author.bot) return
 
-		if (message.content.startsWith(CONFIG.DISCORD.COMMANDS_DISCORD_PREFIX)) {
+		if (CONFIG.DISCORD.COMMANDS_CHANNEL !== '' && message.channel.id !== CONFIG.DISCORD.COMMANDS_CHANNEL || !message.mentions.users.find(user => user.id === CONFIG.DISCORD.BOT_ID)) return
+
+		if (message.content.startsWith(CONFIG.DISCORD.COMMANDS_DISCORD_PREFIX) && message.content.length > 1) {
 			const args = message.content.slice(CONFIG.DISCORD.COMMANDS_DISCORD_PREFIX.length).trim().split(/ +/)
 			const commandName = args.shift().toLowerCase()
 			const command = discord.commands.get(commandName) || discord.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName))
@@ -386,7 +388,7 @@ if (CONFIG.BOT.DISCORD_ENABLED) {
 					message.reply('there was an error trying to execute that command!')
 				}
 			}
-		} else if (message.content.startsWith(CONFIG.DISCORD.COMMANDS_SERVER_PREFIX)) {
+		} else if (message.content.startsWith(CONFIG.DISCORD.COMMANDS_SERVER_PREFIX) && message.content.length > 1) {
 			if (CONFIG.BOT.TELNET_ENABLED && telnet) {
 				let hasAccess = message.member.roles.cache.some(role => {
 					return [
