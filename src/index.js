@@ -413,7 +413,8 @@ if (CONFIG.BOT.DISCORD_ENABLED) {
 							if (error) {
 								console.log(`[Telnet] ! ${error}`)
 								// noinspection JSUnresolvedFunction
-								message.channel.reply(error)
+								if (error.toString() !== '')
+									message.channel.send(error.toString())
 							} else {
 								console.log(`[Telnet] < ${response}`)
 								if (response !== '') {
