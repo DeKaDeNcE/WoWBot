@@ -63,6 +63,9 @@
 		"CONTENT_DIR": "content",
 		"DEBUG": false
 	},
+	"COMMANDS": {
+		"SHOW_ONLINE_PLAYERS": true
+	},
 	"DISCORD": {
 		"COMMANDS_DIR": "commands",
 		"COMMANDS_CHANNEL": "",

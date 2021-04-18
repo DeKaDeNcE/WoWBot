@@ -21,17 +21,32 @@ module.exports = {
 			port: CONFIG.SERVER.REALM_PORT
 		})
 
-		// noinspection JSCheckFunctionSignatures
-		const status = new MessageEmbed()
-			.setColor('#0099ff')
-			.setTitle('Server status')
-			.addFields({
+		let response = [{
+			name: 'Auth Server',
+			value: auth_status ? 'Online' : 'Offline'
+		} , {
+			name: 'Realm Server',
+			value: realm_status ? 'Online' : 'Offline'
+		}]
+
+		if (realm_status && CONFIG.COMMANDS.SHOW_ONLINE_PLAYERS) {
+			response = [{
 				name: 'Auth Server',
 				value: auth_status ? 'Online' : 'Offline'
 			} , {
 				name: 'Realm Server',
 				value: realm_status ? 'Online' : 'Offline'
-			}).setTimestamp()
+			} , {
+				name: 'Players',
+				value: 0
+			}]
+		}
+
+		// noinspection JSCheckFunctionSignatures
+		const status = new MessageEmbed()
+			.setColor('#0099ff')
+			.setTitle('Server status')
+			.addFields(response).setTimestamp()
 
 		message.channel.send(status)
 	}
