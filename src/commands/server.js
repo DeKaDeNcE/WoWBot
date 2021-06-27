@@ -23,19 +23,19 @@ module.exports = {
 
 		let response = [{
 			name: 'Auth Server',
-			value: auth_status ? 'Online' : 'Offline'
+			value: auth_status ? '✅ Online' : '❌ Offline'
 		} , {
 			name: 'Realm Server',
-			value: realm_status ? 'Online' : 'Offline'
+			value: realm_status ? '✅ Online' : '❌ Offline'
 		}]
 
 		if (realm_status && CONFIG.COMMANDS.SHOW_ONLINE_PLAYERS) {
 			response = [{
 				name: 'Auth Server',
-				value: auth_status ? 'Online' : 'Offline'
+				value: auth_status ? '✅ Online' : '❌ Offline'
 			} , {
 				name: 'Realm Server',
-				value: realm_status ? 'Online' : 'Offline'
+				value: realm_status ? '✅ Online' : '❌ Offline'
 			} , {
 				name: 'Players',
 				value: 0
@@ -43,10 +43,7 @@ module.exports = {
 		}
 
 		// noinspection JSCheckFunctionSignatures
-		const status = new MessageEmbed()
-			.setColor('#0099ff')
-			.setTitle('Server status')
-			.addFields(response).setTimestamp()
+		const status = new MessageEmbed().setColor('#0099ff').setTitle('Server status').addFields(response).setTimestamp()
 
 		message.channel.send(status)
 	}
