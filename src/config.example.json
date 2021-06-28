@@ -6,46 +6,33 @@
 		"AI_ENABLED": true,
 		"DISCORD_ENABLED": true,
 		"DATABASE_ENABLED": false,
-		"TUNNEL_ENABLED": true,
-		"TELNET_ENABLED": true,
-		"BOT_NAME": "WoWBot",
-		"BOT_ACTIVITY_TYPE": "PLAYING",
-		"BOT_ACTIVITY_NAME": "World of Warcraft",
-		"BOT_REPLY_OK": ["Command executed succesfully", "Your wish is my command"],
-		"USER_NAME": "Anonymous"
+		"TUNNEL_ENABLED": false,
+		"TELNET_ENABLED": false
 	},
-	"SERVER": {
+	"AUTH_SERVER": {
 		"HOST": "127.0.0.1",
-		"SSH_PORT": 22,
-		"AUTH_PORT": 1119,
-		"REALM_PORT": 8085,
-		"TELNET_PORT": 3443,
-		"SOAP_PORT": 7878
+		"PORT": 1119
 	},
+	"REALM_SERVERS": [{
+		"HOST": "127.0.0.1",
+		"PORT": 8085
+	}],
 	"SSH": {
-		"USERNAME": "",
-		"PASSWORD": ""
+		"HOST": "127.0.0.1",
+		"PORT": 22,
+		"USERNAME": "<USERNAME>",
+		"PASSWORD": "<PASSWORD>"
 	},
 	"TUNNEL": {
 		"LOCALHOST": "127.0.0.1",
 		"DATABASE_PORT": 3307,
-		"TELNET_PORT": 4444,
-		"SOAP_PORT": 7979
-	},
-	"DATABASE": {
-		"HOST": "127.0.0.1",
-		"PORT": 3306,
-		"USERNAME": "",
-		"PASSWORD": "",
-		"DATABASE_AUTH": "",
-		"DATABASE_CHARACTERS": "",
-		"DATABASE_HOTFIXES": "",
-		"DATABASE_WORLD": "",
-		"DEBUG": false
+		"TELNET_PORT": 4444
 	},
 	"TELNET": {
-		"USERNAME": "",
-		"PASSWORD": "",
+		"HOST": "127.0.0.1",
+		"PORT": 3443,
+		"USERNAME": "<USERNAME>",
+		"PASSWORD": "<PASSWORD>",
 		"FAILED_LOGIN": "Authentication failed",
 		"PROMPT": "TC>",
 		"PROMPT_USERNAME": "Username[: ]*",
@@ -57,32 +44,54 @@
 		"TIMEOUT_EXEC": 2000,
 		"TIMEOUT_SEND": 2000,
 		"ECHO_LINES": 0,
+		"USE_TUNNEL": false,
+		"DEBUG": false
+	},
+	"DATABASE": {
+		"HOST": "127.0.0.1",
+		"PORT": 3306,
+		"USERNAME": "<USERNAME>",
+		"PASSWORD": "<PASSWORD>",
+		"DATABASE_AUTH": "auth",
+		"DATABASE_CHARACTERS": "characters",
+		"DATABASE_HOTFIXES": "hotfixes",
+		"DATABASE_WORLD": "world",
+		"USE_TUNNEL": false,
 		"DEBUG": false
 	},
 	"AI": {
-		"CONTENT_DIR": "content",
+		"NAME": "WoWBot",
+		"REPLY_OK": ["Command executed succesfully", "Your wish is my command"],
+		"CONTENT_DIR": "content/roRO",
 		"DEBUG": false
 	},
 	"COMMANDS": {
-		"SHOW_ONLINE_PLAYERS": true
+		"SERVER": {
+			"SHOW_ONLINE_PLAYERS": true,
+			"UPDATE_LAST_MESSAGE": true
+		}
 	},
 	"DISCORD": {
+		"BOT_ID": "<DISCORD APP/BOT ID>",
+		"BOT_TOKEN": "<DISCORD BOT TOKEN>",
+		"BOT_ACTIVITY_TYPE": "PLAYING",
+		"BOT_ACTIVITY_NAME": "World of Warcraft",
+		"MAX_MESSAGE_LENGTH": 2000,
 		"COMMANDS_DIR": "commands",
-		"COMMANDS_CHANNEL": "",
+		"COMMANDS_CHANNEL": "<DISCORD CHANNEL ID>",
 		"COMMANDS_DISCORD_PREFIX": "!",
 		"COMMANDS_SERVER_PREFIX": ".",
-		"MAX_MESSAGE_LENGTH": 2000,
-		"BOT_TOKEN": "",
-		"BOT_ID": "",
-		"ROLE_OWNER": "",
-		"ROLE_ADMIN": "",
-		"ROLE_CORE_DEVELOPER": "",
-		"ROLE_DEVELOPER": "",
-		"ROLE_TRIAL_DEVELOPER": "",
-		"ROLE_HEAD_GAME_MASTER": "",
-		"ROLE_GAME_MASTER": "",
-		"ROLE_TRIAL_GAME_MASTER": "",
-		"ROLE_COMMUNITY_MANAGER": "",
-		"ROLE_SERVER_BOOSTER": ""
+		"ROLES": {
+			"ROLE_OWNER": "<DISCORD ROLE ID>",
+			"ROLE_ADMIN": "<DISCORD ROLE ID>",
+			"ROLE_CORE_DEVELOPER": "<DISCORD ROLE ID>",
+			"ROLE_DEVELOPER": "<DISCORD ROLE ID>",
+			"ROLE_TRIAL_DEVELOPER": "<DISCORD ROLE ID>",
+			"ROLE_HEAD_GAME_MASTER": "<DISCORD ROLE ID>",
+			"ROLE_GAME_MASTER": "<DISCORD ROLE ID>",
+			"ROLE_TRIAL_GAME_MASTER": "<DISCORD ROLE ID>",
+			"ROLE_COMMUNITY_MANAGER": "<DISCORD ROLE ID>",
+			"ROLE_SERVER_BOOSTER": "<DISCORD ROLE ID>"
+		}
 	}
 }
