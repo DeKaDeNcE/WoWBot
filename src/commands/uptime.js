@@ -48,8 +48,8 @@ module.exports = {
 			})
 
 			const params = {
-				host: CONFIG.SERVER.HOST,
-				port: CONFIG.SERVER.SSH_PORT,
+				host: CONFIG.SSH.HOST,
+				port: CONFIG.SSH.PORT,
 				username: CONFIG.SSH.USERNAME,
 				password: CONFIG.SSH.PASSWORD
 			}
