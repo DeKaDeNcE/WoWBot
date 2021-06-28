@@ -45,7 +45,7 @@ if (docker()) {
 }
 
 if (CONFIG.BOT.INTERACTIVE_ENABLED) {
-	console.log('[Interactive] ! Enabled')
+	console.log('[Interactive][!] Enabled')
 	// noinspection JSUnresolvedVariable
 	io = readline.createInterface({
 		input: process.stdin,
@@ -54,7 +54,7 @@ if (CONFIG.BOT.INTERACTIVE_ENABLED) {
 }
 
 if (CONFIG.BOT.DATABASE_ENABLED) {
-	console.log('[DB] ! Enabled')
+	console.log('[DB][!] Enabled')
 
 	db = mysql.createConnection({
 		host: CONFIG.DATABASE.HOST,
@@ -88,7 +88,7 @@ if (CONFIG.BOT.DATABASE_ENABLED) {
 						if (error) {
 							console.log(error)
 						} else {
-							console.log('The solution is: ', results)
+							console.log('[DB][>] The solution is: ', results)
 						}
 
 						db.end()
@@ -105,7 +105,7 @@ if (CONFIG.BOT.DATABASE_ENABLED) {
 				if (error) {
 					console.log(error)
 				} else {
-					console.log('The solution is: ', results)
+					console.log('[DB][>] The solution is: ', results)
 				}
 
 				db.end()
@@ -119,7 +119,7 @@ if (CONFIG.BOT.DATABASE_ENABLED) {
 			if (error) {
 				console.log(error)
 			} else {
-				console.log('The solution is: ', results)
+				console.log('[DB][>] The solution is: ', results)
 			}
 
 			db.end()
@@ -128,7 +128,7 @@ if (CONFIG.BOT.DATABASE_ENABLED) {
 }
 
 if (CONFIG.BOT.AI_ENABLED) {
-	console.log('[AI] ! Enabled')
+	console.log('[AI][!] Enabled')
 	// noinspection JSCheckFunctionSignatures,JSUnusedGlobalSymbols
 	bot = new RiveScript({
 		debug: CONFIG.AI.DEBUG,
@@ -139,20 +139,20 @@ if (CONFIG.BOT.AI_ENABLED) {
 }
 
 if ((CONFIG.BOT.INTERACTIVE_ENABLED || CONFIG.BOT.DISCORD_ENABLED) && CONFIG.BOT.TELNET_ENABLED) {
-	console.log('[Telnet] ! Enabled')
+	console.log('[Telnet][!] Enabled')
 
 	telnet = new Telnet()
 
 	telnet.on('connect', () => {
-		console.log('[Telnet] ! Connected')
+		console.log('[Telnet][!] Connected')
 	})
 
 	// noinspection JSUnusedLocalSymbols
 	telnet.on('ready', prompt => {
-		console.log('[Telnet] ! Ready')
+		console.log('[Telnet][!] Ready')
 
 		if (CONFIG.BOT.INTERACTIVE_ENABLED) {
-			io.setPrompt('[Telnet] > ')
+			io.setPrompt('[Telnet][>] ')
 			io.prompt()
 
 			io.on('line', command => {
@@ -160,9 +160,9 @@ if ((CONFIG.BOT.INTERACTIVE_ENABLED || CONFIG.BOT.DISCORD_ENABLED) && CONFIG.BOT
 					// noinspection JSCheckFunctionSignatures,JSIgnoredPromiseFromCall
 					telnet.exec(command, (error, response) => {
 						if (error) {
-							console.log(`[Telnet] ! ${error}`)
+							console.log(`[Telnet][!] ${error}`)
 						} else {
-							console.log(`[Telnet] < ${response}`)
+							console.log(`[Telnet][<] ${response}`)
 						}
 
 						io.prompt()
@@ -179,36 +179,36 @@ if ((CONFIG.BOT.INTERACTIVE_ENABLED || CONFIG.BOT.DISCORD_ENABLED) && CONFIG.BOT
 
 	telnet.on('writedone', () => {
 		if (CONFIG.TELNET.DEBUG) {
-			console.log('[Telnet] ! Write Done')
+			console.log('[Telnet][!] Write Done')
 		}
 	})
 
 	telnet.on('data', buffer => {
 		if (CONFIG.TELNET.DEBUG) {
-			console.log(`[Telnet] ! Data: ${buffer}`)
+			console.log(`[Telnet][!] Data: ${buffer}`)
 		}
 	})
 
 	telnet.on('timeout', () => {
-		console.log('[Telnet] ! Socket Timeout')
+		console.log('[Telnet][!] Socket Timeout')
 		// noinspection JSIgnoredPromiseFromCall
 		telnet.end()
 	})
 
 	telnet.on('failedlogin', () => {
-		console.log('[Telnet] ! Failed Login')
+		console.log('[Telnet][!] Failed Login')
 	})
 
 	telnet.on('error', () => {
-		console.log('[Telnet] ! Error')
+		console.log('[Telnet][!] Error')
 	})
 
 	telnet.on('end', () => {
-		console.log('[Telnet] ! Disconnected')
+		console.log('[Telnet][!] Disconnected')
 	})
 
 	telnet.on('close', () => {
-		console.log('[Telnet] ! Connection Closed')
+		console.log('[Telnet][!] Connection Closed')
 	})
 
 	async function connect() {
@@ -235,7 +235,7 @@ if ((CONFIG.BOT.INTERACTIVE_ENABLED || CONFIG.BOT.DISCORD_ENABLED) && CONFIG.BOT
 
 		if (CONFIG.BOT.TUNNEL_ENABLED) {
 			if (CONFIG.TELNET.USE_TUNNEL) {
-				console.log('[Telnet] ! Tunnel Enabled')
+				console.log('[Telnet][!] Tunnel Enabled')
 
 				// noinspection JSUnresolvedVariable,JSUnusedLocalSymbols
 				tunnel_telnet = tunnel({
@@ -250,15 +250,15 @@ if ((CONFIG.BOT.INTERACTIVE_ENABLED || CONFIG.BOT.DISCORD_ENABLED) && CONFIG.BOT
 					keepaliveInterval: 300
 				}, async (error, server) => {
 					if (error) {
-						console.log(`[Telnet] ! ${error}`)
+						console.log(`[Telnet][!] ${error}`)
 					} else {
 						try {
 							// noinspection JSIgnoredPromiseFromCall
 							await telnet.connect(params).catch(error => {
-								console.log(`[Telnet] ! ${error}`)
+								console.log(`[Telnet][!] ${error}`)
 							})
 						} catch (error) {
-							console.log(`[Telnet] ! ${error}`)
+							console.log(`[Telnet][!] ${error}`)
 						}
 					}
 				})
@@ -266,26 +266,26 @@ if ((CONFIG.BOT.INTERACTIVE_ENABLED || CONFIG.BOT.DISCORD_ENABLED) && CONFIG.BOT
 				try {
 					// noinspection JSIgnoredPromiseFromCall
 					await telnet.connect(params).catch(error => {
-						console.log(`[Telnet] !! ${error}`)
+						console.log(`[Telnet][!!] ${error}`)
 					})
 				} catch (error) {
-					console.log(`[Telnet] !! ${error}`)
+					console.log(`[Telnet][!!] ${error}`)
 				}
 			}
 		} else {
 			try {
 				// noinspection JSIgnoredPromiseFromCall
 				await telnet.connect(params).catch(error => {
-					console.log(`[Telnet] !!! ${error}`)
+					console.log(`[Telnet][!!!] ${error}`)
 				})
 			} catch (error) {
-				console.log(`[Telnet] !!! ${error}`)
+				console.log(`[Telnet][!!!] ${error}`)
 			}
 		}
 	}
 
 	connect().catch(error => {
-		console.log(`[Telnet] !!!! ${error}`)
+		console.log(`[Telnet][!!!!] ${error}`)
 	})
 }
 
@@ -294,7 +294,7 @@ if (CONFIG.BOT.AI_ENABLED) {
 	bot.loadDirectory(`./src/${CONFIG.AI.CONTENT_DIR}`).then(() => {
 		bot.sortReplies()
 
-		console.log('Content loaded!')
+		console.log('[AI][!] Content Loaded')
 
 		if (CONFIG.BOT.INTERACTIVE_ENABLED) {
 			io.setPrompt(`[${CONFIG.AI.NAME}] `)
@@ -430,12 +430,13 @@ if (CONFIG.BOT.DISCORD_ENABLED) {
 						telnet.exec(command, (error, response) => {
 							// noinspection DuplicatedCode
 							if (error) {
-								console.log(`[Telnet] ! ${error}`)
+								console.log(`[Telnet][!] ${error}`)
 								// noinspection JSUnresolvedFunction
 								if (error.toString() !== '')
 									message.channel.send(error.toString())
 							} else {
-								console.log(`[Telnet] < ${response}`)
+								console.log(`[Telnet][<] ${response}`)
+								// noinspection DuplicatedCode
 								if (response !== '') {
 									if (response.length > CONFIG.DISCORD.MAX_MESSAGE_LENGTH) {
 										let chunks = chunk(response, CONFIG.DISCORD.MAX_MESSAGE_LENGTH)
@@ -461,11 +462,12 @@ if (CONFIG.BOT.DISCORD_ENABLED) {
 						telnet.exec(command, (error, response) => {
 							// noinspection DuplicatedCode
 							if (error) {
-								console.log(`[Telnet] ! ${error}`)
+								console.log(`[Telnet][!] ${error}`)
 								// noinspection JSUnresolvedFunction
 								message.channel.reply(error)
 							} else {
-								console.log(`[Telnet] < ${response}`)
+								console.log(`[Telnet][<] ${response}`)
+								// noinspection DuplicatedCode
 								if (response !== '') {
 									if (response.length > CONFIG.DISCORD.MAX_MESSAGE_LENGTH) {
 										let chunks = chunk(response, CONFIG.DISCORD.MAX_MESSAGE_LENGTH)
