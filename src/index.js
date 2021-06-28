@@ -359,7 +359,7 @@ if (CONFIG.BOT.DISCORD_ENABLED) {
 	})
 
 	discord.on('message', message => {
-		let isCommandChannel = CONFIG.DISCORD.COMMANDS_CHANNEL !== '' ? CONFIG.DISCORD.COMMANDS_CHANNEL === message.channel.id : true;
+		let isCommandChannel = CONFIG.DISCORD.COMMANDS_CHANNEL !== '' ? CONFIG.DISCORD.COMMANDS_CHANNEL === message.channel.id : true
 		let isBotMentioned = message.mentions.users.find(user => user.id === CONFIG.DISCORD.BOT_ID) !== undefined
 		let isMessageFromBot = message.author.bot
 
