@@ -5,7 +5,7 @@ const os = require('os')
 // noinspection JSUnresolvedFunction
 const CONFIG = require('../config.json')
 // noinspection JSUnresolvedFunction
-const { MessageEmbed } = require('discord.js');
+const { MessageEmbed } = require('discord.js')
 
 // noinspection JSUnresolvedVariable,JSUnusedLocalSymbols
 module.exports = {
@@ -17,7 +17,7 @@ module.exports = {
 			const ssh2 = new Client()
 
 			ssh2.on('ready', () => {
-				console.log('[SSH] ! Ready');
+				console.log('[SSH][!] Ready')
 				ssh2.exec('uptime', (error, stream) => {
 					if (error) {
 						console.log(error)
@@ -26,17 +26,17 @@ module.exports = {
 						}
 					} else {
 						stream.on('close', (code, signal) => {
-							console.log(`[SSH] ! Connection closed with ${code} ` + (signal ? `signal ${signal}` : ''))
+							console.log(`[SSH][!] Connection closed with ${code} ` + (signal ? `signal ${signal}` : ''))
 							ssh2.end()
 						}).on('data', data => {
-							console.log(`[SSH] < StdOut ${data}`)
+							console.log(`[SSH][<] StdOut ${data}`)
 							if (data.toString() !== '') {
 								message.channel.send(data.toString())
 							} else {
 								message.channel.reply('SSH is not connected, try again later...')
 							}
 						}).stderr.on('data', data => {
-							console.log(`[SSH] < StdErr ${data}`)
+							console.log(`[SSH][<] StdErr ${data}`)
 							if (data.toString() !== '') {
 								message.channel.send(data.toString())
 							} else {

@@ -3,7 +3,7 @@ const check = require('../functions/check')
 // noinspection JSUnresolvedFunction
 const CONFIG = require('../config.json')
 // noinspection JSUnresolvedFunction
-const { MessageEmbed } = require('discord.js');
+const { MessageEmbed } = require('discord.js')
 
 // noinspection JSUnresolvedVariable,JSUnusedLocalSymbols
 module.exports = {
