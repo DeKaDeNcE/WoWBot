@@ -12,13 +12,13 @@ module.exports = {
 	cooldown: 5,
 	execute: async (message, args) => {
 		let auth_status = await check({
-			host: CONFIG.SERVER.HOST,
-			port: CONFIG.SERVER.AUTH_PORT
+			host: CONFIG.AUTH_SERVER.HOST,
+			port: CONFIG.AUTH_SERVER.PORT
 		})
 
 		let realm_status = await check({
-			host: CONFIG.SERVER.HOST,
-			port: CONFIG.SERVER.REALM_PORT
+			host: CONFIG.REALM_SERVERS[0].HOST,
+			port: CONFIG.REALM_SERVERS[0].PORT
 		})
 
 		let response = [{
@@ -29,7 +29,7 @@ module.exports = {
 			value: realm_status ? '✅ Online' : '❌ Offline'
 		}]
 
-		if (realm_status && CONFIG.COMMANDS.SHOW_ONLINE_PLAYERS) {
+		if (realm_status && CONFIG.COMMANDS.SERVER.SHOW_ONLINE_PLAYERS) {
 			response = [{
 				name: 'Auth Server',
 				value: auth_status ? '✅ Online' : '❌ Offline'

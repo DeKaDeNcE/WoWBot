@@ -23,7 +23,7 @@ const docker = require('./functions/docker')
 const chunk = require('./functions/chunk')
 
 const replyOK = () => {
-	return CONFIG.BOT.BOT_REPLY_OK[Math.floor(Math.random() * CONFIG.BOT.BOT_REPLY_OK.length)]
+	return CONFIG.AI.REPLY_OK[Math.floor(Math.random() * CONFIG.AI.REPLY_OK.length)]
 }
 
 let discord
@@ -58,44 +58,59 @@ if (CONFIG.BOT.DATABASE_ENABLED) {
 
 	db = mysql.createConnection({
 		host: CONFIG.DATABASE.HOST,
-		port: CONFIG.BOT.TUNNEL_ENABLED ? CONFIG.TUNNEL.DATABASE_PORT : CONFIG.DATABASE.PORT,
+		port: CONFIG.BOT.TUNNEL_ENABLED && CONFIG.DATABASE.USE_TUNNEL ? CONFIG.TUNNEL.DATABASE_PORT : CONFIG.DATABASE.PORT,
 		user: CONFIG.DATABASE.USERNAME,
 		password: CONFIG.DATABASE.PASSWORD,
 		debug: CONFIG.DATABASE.DEBUG
 	})
 
 	if (CONFIG.BOT.TUNNEL_ENABLED) {
-		// noinspection JSUnusedLocalSymbols
-		tunnel_mysql = tunnel({
-			username: CONFIG.SSH.USERNAME,
-			password: CONFIG.SSH.PASSWORD,
-			host: CONFIG.SERVER.HOST,
-			port: CONFIG.SERVER.SSH_PORT,
-			dstPort: CONFIG.DATABASE.PORT,
-			localHost: CONFIG.TUNNEL.LOCALHOST,
-			localPort: CONFIG.TUNNEL.DATABASE_PORT,
-			keepAlive: true,
-			keepaliveInterval: 300
-		}, (error, server) => {
-			if (error) {
-				console.log(error)
-			} else {
-				db.connect()
+		if (CONFIG.DATABASE.USE_TUNNEL) {
+			// noinspection JSUnusedLocalSymbols
+			tunnel_mysql = tunnel({
+				username: CONFIG.SSH.USERNAME,
+				password: CONFIG.SSH.PASSWORD,
+				host: CONFIG.SSH.HOST,
+				port: CONFIG.SSH.PORT,
+				dstPort: CONFIG.DATABASE.PORT,
+				localHost: CONFIG.TUNNEL.LOCALHOST,
+				localPort: CONFIG.TUNNEL.DATABASE_PORT,
+				keepAlive: true,
+				keepaliveInterval: 300
+			}, (error, server) => {
+				if (error) {
+					console.log(error)
+				} else {
+					db.connect()
 
-				// noinspection JSUnusedLocalSymbols
-				db.query(`SELECT * FROM ${CONFIG.DATABASE.DATABASE_AUTH}.realmlist`, (error, results, fields) => {
-					if (error) {
-						console.log(error)
-					} else {
-						console.log('The solution is: ', results)
-					}
+					// noinspection JSUnusedLocalSymbols
+					db.query(`SELECT * FROM ${CONFIG.DATABASE.DATABASE_AUTH}.realmlist`, (error, results, fields) => {
+						if (error) {
+							console.log(error)
+						} else {
+							console.log('The solution is: ', results)
+						}
 
-					db.end()
+						db.end()
 
-					tunnel_mysql.close()
-				})
-			}
-		})
+						tunnel_mysql.close()
+					})
+				}
+			})
+		} else {
+			db.connect()
+
+			// noinspection JSUnusedLocalSymbols
+			db.query(`SELECT * FROM ${CONFIG.DATABASE.DATABASE_AUTH}.realmlist`, (error, results, fields) => {
+				if (error) {
+					console.log(error)
+				} else {
+					console.log('The solution is: ', results)
+				}
+
+				db.end()
+			})
+		}
 	} else {
 		db.connect()
 
@@ -198,8 +213,8 @@ if ((CONFIG.BOT.INTERACTIVE_ENABLED || CONFIG.BOT.DISCORD_ENABLED) && CONFIG.BOT
 
 	async function connect() {
 		const params = {
-			host: CONFIG.BOT.TUNNEL_ENABLED ? CONFIG.TUNNEL.LOCALHOST : CONFIG.SERVER.HOST,
-			port: CONFIG.BOT.TUNNEL_ENABLED ? CONFIG.TUNNEL.TELNET_PORT : CONFIG.SERVER.TELNET_PORT,
+			host: CONFIG.BOT.TUNNEL_ENABLED && CONFIG.TELNET.USE_TUNNEL ? CONFIG.TUNNEL.LOCALHOST : CONFIG.TELNET.HOST,
+			port: CONFIG.BOT.TUNNEL_ENABLED && CONFIG.TELNET.USE_TUNNEL ? CONFIG.TUNNEL.TELNET_PORT : CONFIG.TELNET.PORT,
 			username: CONFIG.TELNET.USERNAME,
 			password: CONFIG.TELNET.PASSWORD,
 			failedLoginMatch: CONFIG.TELNET.FAILED_LOGIN,
@@ -219,47 +234,58 @@ if ((CONFIG.BOT.INTERACTIVE_ENABLED || CONFIG.BOT.DISCORD_ENABLED) && CONFIG.BOT
 		}
 
 		if (CONFIG.BOT.TUNNEL_ENABLED) {
-			console.log('[Telnet] ! Tunnel Enabled')
+			if (CONFIG.TELNET.USE_TUNNEL) {
+				console.log('[Telnet] ! Tunnel Enabled')
 
-			// noinspection JSUnresolvedVariable,JSUnusedLocalSymbols
-			tunnel_telnet = tunnel({
-				username: CONFIG.SSH.USERNAME,
-				password: CONFIG.SSH.PASSWORD,
-				host: CONFIG.SERVER.HOST,
-				port: CONFIG.SERVER.SSH_PORT,
-				dstPort: CONFIG.SERVER.TELNET_PORT,
-				localHost: CONFIG.TUNNEL.LOCALHOST,
-				localPort: CONFIG.TUNNEL.TELNET_PORT,
-				keepAlive: true,
-				keepaliveInterval: 300
-			}, async (error, server) => {
-				if (error) {
-					console.log(`[Telnet] ! ${error}`)
-				} else {
-					try {
-						// noinspection JSIgnoredPromiseFromCall
-						await telnet.connect(params).catch(error => {
-							console.log(`[Telnet] ! ${error}`)
-						})
-					} catch (error) {
+				// noinspection JSUnresolvedVariable,JSUnusedLocalSymbols
+				tunnel_telnet = tunnel({
+					username: CONFIG.SSH.USERNAME,
+					password: CONFIG.SSH.PASSWORD,
+					host: CONFIG.SSH.HOST,
+					port: CONFIG.SSH.PORT,
+					dstPort: CONFIG.TELNET.PORT,
+					localHost: CONFIG.TUNNEL.LOCALHOST,
+					localPort: CONFIG.TUNNEL.TELNET_PORT,
+					keepAlive: true,
+					keepaliveInterval: 300
+				}, async (error, server) => {
+					if (error) {
 						console.log(`[Telnet] ! ${error}`)
+					} else {
+						try {
+							// noinspection JSIgnoredPromiseFromCall
+							await telnet.connect(params).catch(error => {
+								console.log(`[Telnet] ! ${error}`)
+							})
+						} catch (error) {
+							console.log(`[Telnet] ! ${error}`)
+						}
 					}
+				})
+			} else {
+				try {
+					// noinspection JSIgnoredPromiseFromCall
+					await telnet.connect(params).catch(error => {
+						console.log(`[Telnet] !! ${error}`)
+					})
+				} catch (error) {
+					console.log(`[Telnet] !! ${error}`)
 				}
-			})
+			}
 		} else {
 			try {
 				// noinspection JSIgnoredPromiseFromCall
 				await telnet.connect(params).catch(error => {
-					console.log(`[Telnet] ! ${error}`)
+					console.log(`[Telnet] !!! ${error}`)
 				})
 			} catch (error) {
-				console.log(`[Telnet] ! ${error}`)
+				console.log(`[Telnet] !!! ${error}`)
 			}
 		}
 	}
 
 	connect().catch(error => {
-		console.log(`[Telnet] ! ${error}`)
+		console.log(`[Telnet] !!!! ${error}`)
 	})
 }
 
@@ -271,7 +297,7 @@ if (CONFIG.BOT.AI_ENABLED) {
 		console.log('Content loaded!')
 
 		if (CONFIG.BOT.INTERACTIVE_ENABLED) {
-			io.setPrompt(`[${CONFIG.BOT.USER_NAME}] `)
+			io.setPrompt(`[${CONFIG.AI.NAME}] `)
 			io.prompt()
 
 			io.on('line', command => {
@@ -279,8 +305,8 @@ if (CONFIG.BOT.AI_ENABLED) {
 					// noinspection JSUnresolvedVariable
 					process.exit(0)
 				} else {
-					bot.reply(CONFIG.BOT.USER_NAME, command).then(reply => {
-						console.log('[Sylvannas] ' + reply)
+					bot.reply(CONFIG.AI.NAME, command).then(reply => {
+						console.log('[' + CONFIG.AI.NAME + '] ' + reply)
 						io.prompt()
 					}).catch(err => {
 						console.error(err)
@@ -312,8 +338,8 @@ if (CONFIG.BOT.DISCORD_ENABLED) {
 	discord = new Client({
 		presence: {
 			activity: {
-				type: CONFIG.BOT.BOT_ACTIVITY_TYPE,
-				name: CONFIG.BOT.BOT_ACTIVITY_NAME
+				type: CONFIG.DISCORD.BOT_ACTIVITY_TYPE,
+				name: CONFIG.DISCORD.BOT_ACTIVITY_NAME
 			}
 		}
 	})
@@ -391,15 +417,7 @@ if (CONFIG.BOT.DISCORD_ENABLED) {
 		} else if (!isMessageFromBot && isCommandChannel && message.content.startsWith(CONFIG.DISCORD.COMMANDS_SERVER_PREFIX) && message.content.length > 1) {
 			if (CONFIG.BOT.TELNET_ENABLED && telnet) {
 				let hasAccess = message.member.roles.cache.some(role => {
-					return [
-						CONFIG.DISCORD.ROLE_OWNER,
-						CONFIG.DISCORD.ROLE_ADMIN,
-						CONFIG.DISCORD.ROLE_CORE_DEVELOPER,
-						CONFIG.DISCORD.ROLE_DEVELOPER,
-						CONFIG.DISCORD.ROLE_TRIAL_DEVELOPER,
-						CONFIG.DISCORD.ROLE_HEAD_GAME_MASTER,
-						CONFIG.DISCORD.ROLE_TRIAL_GAME_MASTER
-					].includes(role.id)
+					return Object.values(CONFIG.DISCORD.ROLES).includes(role.id)
 				})
 
 				const command = message.content.substring(1)
@@ -410,6 +428,7 @@ if (CONFIG.BOT.DISCORD_ENABLED) {
 					if (command !== '') {
 						// noinspection JSUnresolvedFunction,DuplicatedCode
 						telnet.exec(command, (error, response) => {
+							// noinspection DuplicatedCode
 							if (error) {
 								console.log(`[Telnet] ! ${error}`)
 								// noinspection JSUnresolvedFunction
@@ -436,10 +455,11 @@ if (CONFIG.BOT.DISCORD_ENABLED) {
 							}
 						})
 					}
-				} else if (message.member.roles.cache.has(CONFIG.DISCORD.ROLE_COMMUNITY_MANAGER) || message.member.roles.cache.has(CONFIG.DISCORD.ROLE_SERVER_BOOSTER)) {
+				} else if (message.member.roles.cache.has(CONFIG.DISCORD.ROLES.COMMUNITY_MANAGER) || message.member.roles.cache.has(CONFIG.DISCORD.ROLES.SERVER_BOOSTER)) {
 					if (command.startsWith('revive') || command.startsWith('announce') || command.startsWith('notify')) {
 						// noinspection JSUnresolvedFunction,DuplicatedCode
 						telnet.exec(command, (error, response) => {
+							// noinspection DuplicatedCode
 							if (error) {
 								console.log(`[Telnet] ! ${error}`)
 								// noinspection JSUnresolvedFunction
